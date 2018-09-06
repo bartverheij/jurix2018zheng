@@ -154,7 +154,20 @@ The program uses predicate {\mf case\_model\_valid} which is implied by a set of
 
 Predicate {\mf case\_model\_consistent} is used for judging the consistency of case models. In this process, we use predicate {\mf consistent\_case} to check if there exists a case in the case list that its negation is still in the list. Predicate {\mf consistent\_list} is implied by {\mf consistent\_case}, which is used for checking whether the whole case list exists the situation that happened in {\mf consistent\_case}. Predicate {\mf case\_model\_ incompatible} is used to check if the model is incompatible, it is implied by predicate {\mf incompatible\_case} which aims for checking every two cases in one case list is incompatible. Predicate {\mf case\_model\_ different} is used for checking the difference of cases in the case model, if there exists two cases the same as each other, the program will return {\mf false}.
 
-The main function of this program is verifying the validity of the arguments in case models. The program use predicate {\mf coherent} to examine coherent arguments. This predicate is implied by {\mf coherent\_casemade}, which uses predicate {\mf member\_list} to check if the \textit{case made} by the argument in queries is logically implied by at least one case in the case list.
+The main function of this program is verifying the validity of the arguments in case models. 
+
+The program uses predicate {\mf coherent} to examine coherent arguments. This predicate is implied by {\mf coherent\_casemade}, which uses predicate {\mf member\_list} to check if the \textit{case made} by the argument in queries is logically implied by at least one case in the case list.
+\begin{lstlisting}
+coherent_casemade(P,C,[H|T]) :-
+			case(H,Case),
+			append(P,C,L_casemade),
+			member_list(L_casemade,Case),!;
+			coherent_casemade(P,C,T).
+
+coherent(argument(model_num(N),P,C)) :-
+			case_list(model_num(N),Case_list),
+			coherent_casemade(P,C,Case_list).
+\end{lstlisting}
 
 This program uses predicate {\mf conclusive} to verify those arguments that considered to be conclusive. According to Verheij's formalism, conclusive arguments must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. Predicate {\mf conclusive\_casemade} is the basic predicate of the process of verifying conclusive arguments. It is used for checking if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. Predicate {\mf conclusive\_case} is implied by {\mf conclusive\_casemade}. In this predicate which is used for analyzing a case, only two situations will be considered as {\mf true}. Firstly, this case contains both the premises of the argument and the case made by the argument. Secondly, this case does not contain the premises of the argument. The implication of this predicate is {\mf conclusive\_list}, a recursive predicate, which is used to check every case in the case list. If the result of this predicate is {\mf true}, then we can say all cases in the case model imply the premises of the argument also imply its conclusions.
 
@@ -193,6 +206,29 @@ Undermining attack is a special kind of successful attack, which attacks presump
 \end{itemize}
 
 Verheij built a case model for these two articles in his paper presented in ICAIL 2017\citep{Verheij2017Formalizing}, he gave each elementary proposition in the case model an abbreviation. These propositions will be listed in Table 1.
+
+\footnotesize
+\begin{table}[htb]
+\caption{Elementary propositions for the tort law domain}
+\centering
+\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
+\hline
+dut	&	There is a duty to repair someone's damages\\
+dmg	&	Someone has suffered damages by someone else's act.\\
+unl	&	The act committed was unlawful\\
+imp	&	The act can be imputed to the person that committed the act\\
+cau	&	The act caused the suffered damages\\
+vrt	&	The act is a violation of someone’s right.\\
+vst	&	The act is a violation of a statutory duty\\
+vun	&	The act is a violation of unwritten law against proper social conduct\\
+jus	&	There exist grounds of justification\\
+ift	&	The act is imputable to someone because of the person's fault\\
+ila	&	The act is imputable to someone because of law\\
+ico	&	The act is imputable to someone because of common opinion\\
+prp	&	The violated statutory duty does not have the purpose to prevent the damages\\ \hline
+\end{tabularx}
+\end{table}
+\normalsize
 
 
 There are 16 cases in this model which can be found in table 2.
@@ -347,7 +383,7 @@ If we add these defeating circumstance to the rules we listed above, then some o
 
 In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 shows the scenario that although the defendant has published and copied the items shown in Art. 217:1 without the permission of the copyright owner, he still will not be considered as copyright infringement because his action is not belong to "without permission of the copyright owner". Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits, so he will not be judge through Art. 217.
 
-From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 4 lists cases from Case 1 to Case 13. Case 14 to Case 46 have similar components with Case 4 to Case 13, except the situations are different.
+From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 4 lists cases from Case 1 to Case 13. Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different.
 
 \footnotesize
 \begin{table}[htb]
