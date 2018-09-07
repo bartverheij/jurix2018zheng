@@ -155,36 +155,112 @@ Verheij has also defined some kinds of argument attacking in his formalism\citep
 
 \noindent The program introduced in this section was written in Prolog. Case models $(C, \geq)$ are used predicate {\mf case\_model(model\_num(N))} to represent. Each model will be given a number N to distinguish. It is implied by a predicate for cases and a predicate for the preferred relation. In this program, cases in the model are represented in the form of Prolog \textit{list}, as well as the preferred relation. Predicate {\mf case(model\_num(N), case\_num(X), List)} is used for describing cases. Similarly, each case in the case model will be given a number {\mf X}, and {\mf List} contains all the elementary propositions of the case. Predicate {\mf case\_order} has 2 variables, including {\mf model\_num(N)} and the list {\mf Case\_order\_list} shows the preferred relation of cases in the model. 
 
-{\mf Case\_order\_list} lists cases from strong to weak, if one case is as preferred as another case, then these two cases will be placed in a sublist of {\mf Case\_order\_list}. For instance, the preferred relation of a case model with 4 cases is: $case 1 > case 3 \sim case 4 > case 2$. This order will be listed as {\mf [case\_num(1), [case\_num(3), case\_num(4)], case\_num(2)]}.
+{\mf Case\_order\_list} lists cases from strong to weak, if one case is as preferred as another case, then these two cases will be placed in a sublist of {\mf Case\_order\_list}. For instance, the preferred relation of a case model with 4 cases is: $case 1 > case 3 \sim case 4 > case 2$. This order will be listed as {\mf [case\_num(1), [case\_num(3), case\_num(4)], case\_num(2)]}. It is noticed that, predicate {\mf case\_order} must be distinguished with {\mf case\_list} which is a predicate for the set of cases in the case model without the preferred relation.
 
 The program uses predicate {\mf case\_model\_valid} which is implied by a set of predicates to check if the inputted models are consistent, incompatible and different follows the formal definition in Verheij's theory (cf. Definition 2.1).
 
 Predicate {\mf case\_model\_consistent} is used for judging the consistency of case models. In this process, we use predicate {\mf consistent\_case} to check if there exists a case in the case list that its negation is still in the list. Predicate {\mf consistent\_list} is implied by {\mf consistent\_case}, which is used for checking whether the whole case list exists the situation that happened in {\mf consistent\_case}. Predicate {\mf case\_model\_ incompatible} is used to check if the model is incompatible, it is implied by predicate {\mf incompatible\_case} which aims for checking every two cases in one case list is incompatible. Predicate {\mf case\_model\_ different} is used for checking the difference of cases in the case model, if there exists two cases the same as each other, the program will return {\mf false}.
 
-The main function of this program is verifying the validity of the arguments in case models. 
+The main function of this program is verifying the validity of the arguments in case models. The Prolog predicates we define are based on the relevant definitions in Verheij's case model formalism.
 
-The program uses predicate {\mf coherent} to examine coherent arguments. This predicate is implied by {\mf coherent\_casemade}, which uses predicate {\mf member\_list} to check if the \textit{case made} by the argument in queries is logically implied by at least one case in the case list.
+The program uses predicate {\mf coherent} to examine coherent arguments. This predicate is implied by {\mf coherent\_casemade}, which is a recursive predicate that uses {\mf member\_list} to check if the \textit{case made} by the argument in queries is logically implied by at least one case in the case list.
 \begin{lstlisting}
-coherent_casemade(P,C,[H|T]) :-
-			case(H,Case),
-			append(P,C,L_casemade),
-			member_list(L_casemade,Case),!;
-			coherent_casemade(P,C,T).
+coherent_casemade(Premise,Conclusion,[Case_num|Other_cases]) :-
+			case(Case_num,Case),
+			append(Premise,Conclusion,Casemade),
+			member_list(Casemade,Case);
+			coherent_casemade(Premise,Conclusion,Other_cases).
 
-coherent(argument(model_num(N),P,C)) :-
-			case_list(model_num(N),Case_list),
-			coherent_casemade(P,C,Case_list).
+coherent(argument(Premise,Conclusion)) :-
+			case_list(Case_list),
+			coherent_casemade(Premise,Conclusion,Case_list).
 \end{lstlisting}
 
-This program uses predicate {\mf conclusive} to verify those arguments that considered to be conclusive. According to Verheij's formalism, conclusive arguments must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. Predicate {\mf conclusive\_casemade} is the basic predicate of the process of verifying conclusive arguments. It is used for checking if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. Predicate {\mf conclusive\_case} is implied by {\mf conclusive\_casemade}. In this predicate which is used for analyzing a case, only two situations will be considered as {\mf true}. Firstly, this case contains both the premises of the argument and the case made by the argument. Secondly, this case does not contain the premises of the argument. The implication of this predicate is {\mf conclusive\_list}, a recursive predicate, which is used to check every case in the case list. If the result of this predicate is {\mf true}, then we can say all cases in the case model imply the premises of the argument also imply its conclusions.
+This program uses predicate {\mf conclusive} to verify those arguments that considered to be conclusive. According to Verheij's formalism, conclusive arguments must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. In this sense, we use predicate {\mf conclusive\_casemade} to check if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. For each case in the model, we use predicate {\mf conclusive\_case\_check} to examine if it is a case implies both the premises of the argument and the case made by the argument or it doesn't imply the premises of the argument.
+The implication of this predicate is {\mf conclusive\_list}, a recursive predicate, which uses {\mf conclusive\_case\_check} to check every case in the case list. If the result of this predicate is {\mf true}, then we can say all cases in the case model imply the premises of the argument also imply its conclusions.
+\begin{lstlisting}
+case_with_casemade(Premise,Conclusion,Case_num) :-
+		case(Case_num,Case),
+		append(Premise,Conclusion,Casemade),
+		member_list(Premise,Case),
+		member_list(Casemade,Case).
 
-Presumptively valid arguments will use predicate {\mf presumptively\_valid} to verify, which is implied by a series of predicates. First of all, the program will use {\mf coherent} to check if the argument is coherent. Predicate {\mf presumptively\_valid\_casemade\_case\_basic} and its implication {\mf presumptively\_valid\_casemade\_case} is going to select the strongest case which is implied the \textit{case made} by the argument. 
+conclusive_case_check(Premise,Conclusion,Case_num) :-
+		case_with_casemade(Premise,Conclusion,Case_num);
+		case(Case_num,Case),
+		not(member_list(Premise,Case)).
 
-In order to find out the strongest case which implies the premises of an argument, according to the definition of case order, there is a situation must be aware, that is some cases in the model are as preferred as the strongest case. Thus, predicate {\mf presumptively\_valid\_premise\_case\_basic} is used for distinguishing this special situation and its implication {\mf presumptively\_valid\_premise\_case} is going to find out the most preferred case implies the premises of the argument. 
+conclusive_case_list_check(Premise,Conclusion,[Case_num|Other_cases]) :-
+			conclusive_case_check(Premise,Conclusion,Case_num),
+			conclusive_case_list_check(Premise,Conclusion,Other_cases).
 
-Predicate {\mf presumptively\_valid} will check if the strongest case implied the \textit{case made} by the argument and the strongest case implied the premises of the argument are the same case. 
+conclusive(argument(Premise,Conclusion)) :-
+				coherent(argument(Premise,Conclusion)),
+				case_list(Case_list),
+				conclusive_case_list_check(Premise,Conclusion,Case_list).
+\end{lstlisting}
 
-In a query about verifying argument $(\varphi, \psi))$ in the case model $(C, \geq)$, we use predicate {\mf conclusive} and {\mf presumptively\_valid} to verify its properties. There are two Prolog \textit{lists} in these two predicates, the first list contains the premises $\varphi$ of an argument, the second one is consists of the argument's conclusions $\psi$. If the argument is conclusive or presumptively valid, the program will return {\mf true}, else it will return {\mf false}.
+Those presumptively valid arguments in the case models will use predicate {\mf presumptively\_valid} to verify. The program uses {\mf coherent} to check if the argument is coherent. Predicate {\mf best\_case\_casemade} is going to select the most preferred case in the model which contains the case made by the argument. This predicate uses {\mf best\_case\_casemade\_basic} to check whether the case implies the case made by the argument, if so, variable {\mf Best\_case\_casemade} will be assigned a value of the number of this case, i.e., {\mf Case\_num}.
+\begin{lstlisting}
+best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade) :-
+		case(Case_num,Case),
+		append(Premise,Conclusion,Casemade),
+		member_list(Casemade,Case),
+		Best_case_casemade = Case_num.
+
+best_case_casemade(Premise,Conclusion,[Case_num|Other_cases],Best_case_casemade) :-
+			best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade);
+			best_case_casemade(Premise,Conclusion,Other_cases,Best_case_casemade).
+\end{lstlisting}
+
+About the most preferred case implied the case made, according to the definition of case order, there is a situation must be considered, that is some cases in the model are as preferred as this case, which means these cases are in a Prolog \textit{sublist}. 
+Predicate {\mf best\_case\_premise} is used to compare the best case implied the case made by the argument (i.e. {\mf Best\_case\_casemade}) with the cases implied the premises of the argument. In terms of the definition of \textit{presumptively valid arguments}, if the argument is presumptively valid, then the case represented by {\mf Best\_case\_casemade} should be at least as preferred as all cases implied the premises of the argument. As mentioned above, in {\mf best\_case\_premise}, there are 3 situations can let the program return {\mf true},
+\begin{enumerate}
+\item The most preferred case implied the premises is the same as the best case implied the case made, and this case is an element of the case order list;
+\item The most preferred case implied the premises is the same or as preferred as the best case implied the case made, and these cases are in a sublist of the case order list;
+\item All other cases implied the premises are less preferred than the best case implied the case made.
+\end{enumerate}
+
+Predicate {\mf best\_case\_premise\_sublist}, {\mf best\_case\_premise\_element} and their implication {\mf best\_case\_premise\_basic} are used to deal with the third situation:
+\begin{itemize}
+\item If the {\mf Element} is not the best case implied the case made, {\mf best\_case\_premise \_element} will check if it contains the premises of the argument; 
+\item If the {\mf Element} is a sublist, and the best case implied the case made is not a member of it, {\mf best\_case\_premise\_sublist} will make sure that all cases in this sublist do not contain the premises of the argument.
+\end{itemize}
+\begin{lstlisting}
+comparison_premise_sublist(Premise,[Case_num|Other_cases]) :-
+			is_list([Case_num|Other_cases]),
+			case(Case_num,Case),
+			not(member_list(Premise,Case)),
+			comparison_premise_sublist(Premise,Other_ cases).
+
+comparison_premise_case(Premise,Case_num) :-
+			case(Case_num,Case),
+			not(member_list(Premise,Case)).
+
+comparison_premise_basic(Premise,Element) :-
+	comparison_premise_sublist(Premise,Element);
+	comparison_premise_case(Premise,Element).
+
+comparison_premise(Best_case_casemade,Premise,[Element|Other_cases]) :-
+		Best_case_casemade = Element;
+		member(Best_case_casemade,Element);
+		comparison_premise_basic(Premise,Element),
+		comparison_premise(Best_case_casemade,Premise,Other_cases).
+\end{lstlisting}
+
+Predicate {\mf presumptively\_valid} is implied by a series of predicates. Through this predicate, we can use {\mf coherent} to check the coherence of the argument, and then use {\mf best\_case\_casemade} to select the most preferred case implied the case made by the argument, and compare this case with other cases implied the premises which can be implemented by {\mf comparison\_premise}.
+
+\begin{lstlisting}		
+presumptively_valid(argument(Premise,Conclusion)) :-
+				coherent(argument(Premise,Conclusion)),
+				case_order(Case_order),
+				case_list(Case_list),
+				best_case_casemade(Premise,Conclusion,Case_list,Best_case_casemade),
+				comparison_premise(Best_case_casemade,Premise,Case_order).
+\end{lstlisting}
+
+
+||In a query about verifying argument $(\varphi, \psi))$ in the case model $(C, \geq)$, we use predicate {\mf conclusive} and {\mf presumptively\_valid} to verify its properties. There are two Prolog \textit{lists} in these two predicates, the first list contains the premises $\varphi$ of an argument, the second one is consists of the argument's conclusions $\psi$. If the argument is conclusive or presumptively valid, the program will return {\mf true}, else it will return {\mf false}.
 
 For an argument $(\varphi, \psi)$ with defeating circumstances $\chi$ in the case model $(C, \geq)$, we use predicate {\mf successful\_attack} to check if it is a successful attack. According to the definition of \textit{successful attack}, argument $(\varphi, \psi)$ must be presumptively valid. When the defeating circumstances $\chi$ are added, the argument $(\varphi \wedge \chi, \psi)$ will become invalid. We can used predicate {\mf presumptively\_valid} to implement this definition.
 
