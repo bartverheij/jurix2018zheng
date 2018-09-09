@@ -21,9 +21,9 @@
 
 \lstset{ %
   language=Octave,                 % the language of the code
-  basicstyle=\footnotesize,            % the size of the fonts that are used for the code
- % numbers=left,                    % where to put the line-numbers
- % numberstyle=\tiny\color{gray},   % the style that is used for the line-numbers
+  basicstyle=\tiny,            % the size of the fonts that are used for the code
+ %numbers=left,                    % where to put the line-numbers
+ %numberstyle=\tiny\color{gray},   % the style that is used for the line-numbers
   stepnumber=2,                    % the step between two line-numbers. If it's 1,  each line 
                                   % will be numbered
   numbersep=5pt,                   % how far the line-numbers are from the code
@@ -176,7 +176,7 @@ coherent(argument(Premise,Conclusion)) :-
 			coherent_casemade(Premise,Conclusion,Case_list).
 \end{lstlisting}
 
-This program uses predicate {\mf conclusive} to verify those arguments that considered to be conclusive. According to Verheij's formalism, conclusive arguments must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. In this sense, we use predicate {\mf conclusive\_casemade} to check if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. For each case in the model, we use predicate {\mf conclusive\_case\_check} to examine if it is a case implies both the premises of the argument and the case made by the argument or it doesn't imply the premises of the argument.
+This program uses predicate {\mf conclusive} to verify the argument $(\varphi, \psi)$ in the case model $(C, \geq)$ that considered to be conclusive. According to Verheij's formalism, a conclusive argument must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. In this sense, we use predicate {\mf conclusive\_casemade} to check if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. For each case in the model, we use predicate {\mf conclusive\_case\_check} to examine if it is a case implies both the premises of the argument and the case made by the argument or it doesn't imply the premises of the argument.
 The implication of this predicate is {\mf conclusive\_list}, a recursive predicate, which uses {\mf conclusive\_case\_check} to check every case in the case list. If the result of this predicate is {\mf true}, then we can say all cases in the case model imply the premises of the argument also imply its conclusions.
 \begin{lstlisting}
 case_with_casemade(Premise,Conclusion,Case_num) :-
@@ -200,7 +200,7 @@ conclusive(argument(Premise,Conclusion)) :-
 				conclusive_case_list_check(Premise,Conclusion,Case_list).
 \end{lstlisting}
 
-Those presumptively valid arguments in the case models will use predicate {\mf presumptively\_valid} to verify. The program uses {\mf coherent} to check if the argument is coherent. Predicate {\mf best\_case\_casemade} is going to select the most preferred case in the model which contains the case made by the argument. This predicate uses {\mf best\_case\_casemade\_basic} to check whether the case implies the case made by the argument, if so, variable {\mf Best\_case\_casemade} will be assigned a value of the number of this case, i.e., {\mf Case\_num}.
+The presumptively valid argument $(\varphi, \psi)$ in the case model $(C, \geq)$ will use predicate {\mf presumptively\_valid} to verify. The program uses {\mf coherent} to check if the argument is coherent. Predicate {\mf best\_case\_casemade} is going to select the most preferred case in the model which contains the case made by the argument. This predicate uses {\mf best\_case\_casemade\_basic} to check whether the case implies the case made by the argument, if so, variable {\mf Best\_case\_casemade} will be assigned a value of the number of this case, i.e., {\mf Case\_num}.
 \begin{lstlisting}
 best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade) :-
 		case(Case_num,Case),
@@ -209,8 +209,8 @@ best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade) :-
 		Best_case_casemade = Case_num.
 
 best_case_casemade(Premise,Conclusion,[Case_num|Other_cases],Best_case_casemade) :-
-			best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade);
-			best_case_casemade(Premise,Conclusion,Other_cases,Best_case_casemade).
+		best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade);
+		best_case_casemade(Premise,Conclusion,Other_cases,Best_case_casemade).
 \end{lstlisting}
 
 About the most preferred case implied the case made, according to the definition of case order, there is a situation must be considered, that is some cases in the model are as preferred as this case, which means these cases are in a Prolog \textit{sublist}. 
@@ -259,14 +259,32 @@ presumptively_valid(argument(Premise,Conclusion)) :-
 				comparison_premise(Best_case_casemade,Premise,Case_order).
 \end{lstlisting}
 
-
-||In a query about verifying argument $(\varphi, \psi))$ in the case model $(C, \geq)$, we use predicate {\mf conclusive} and {\mf presumptively\_valid} to verify its properties. There are two Prolog \textit{lists} in these two predicates, the first list contains the premises $\varphi$ of an argument, the second one is consists of the argument's conclusions $\psi$. If the argument is conclusive or presumptively valid, the program will return {\mf true}, else it will return {\mf false}.
-
 For an argument $(\varphi, \psi)$ with defeating circumstances $\chi$ in the case model $(C, \geq)$, we use predicate {\mf successful\_attack} to check if it is a successful attack. According to the definition of \textit{successful attack}, argument $(\varphi, \psi)$ must be presumptively valid. When the defeating circumstances $\chi$ are added, the argument $(\varphi \wedge \chi, \psi)$ will become invalid. We can used predicate {\mf presumptively\_valid} to implement this definition.
+\begin{lstlisting}
+successful_attack(argument(Premise,Conclusion),Defeating_circumstance) :-
+					append(Premise,Defeating_circumstance,Premise_and_defeating),
+					presumptively_valid(argument(Premise,Conclusion)),
+					not(presumptively_valid(argument(Premise_and_defeating,Conclusion))).
+\end{lstlisting}
 
-Predicate {\mf rebutting\_attack} is used to distinguish rebutting attack, which is implied by {\mf successful\_attack} and {\mf presumtively\_valid}. If circumstances $\chi$ successfully attacking the argument  $(\varphi, \psi)$, and argument $(\varphi \wedge \chi, \psi)$ is also presumptively valid, then we can say this is a rebutting attack. Predicate {\mf undercutting\_attack} is for undercutting attack, which is the negative form of predicate {\mf rebutting\_attack}.
+Predicate {\mf rebutting\_attack} is used to distinguish rebutting attack, which is implied by {\mf successful\_attack} and {\mf presumtively\_valid}. If circumstances $\chi$ successfully attacking the argument  $(\varphi, \psi)$, and argument $(\varphi \wedge \chi, \neg \psi)$ is also presumptively valid, then we can say this is a rebutting attack. In this process, we use {\mf negation\_list} to turn the conclusions into its negation. Predicate {\mf undercutting\_attack} is for undercutting attack, which is the negation of predicate {\mf rebutting\_attack}.
+\begin{lstlisting}
+rebutting_attack(argument(Premise,Conclusion),Defeating_circumstance) :-
+		successful_attack(argument(Premise,Conclusion),Defeating_circumstance),
+		negation_list(Conclusion,Neg_Conclusion),
+		append(Premise,Defeating_circumstance,Premise_and_defeating),
+		presumptively_valid(argument(Premise_and_defeating,Neg_Conclusion)).
 
-Undermining attack is a special kind of successful attack, which attacks presumption $(\top, \varphi)$. In this program, a tautology $\top$ is represented as an empty \textit{list} {\mf [ ]}, so predicate {\mf undermining\_attack} is not only implied by {\mf successful\_attack}, but also a predicate which is used to check if the list of premises is empty.
+undercutting_attack(argument(Premise,Conclusion),Defeating_circumstance) :-
+		not(rebutting_attack(argument(Premise,Conclusion),Defeating_circumstance)).
+\end{lstlisting}
+
+Undermining attack is a special kind of successful attack, which attacks presumption $(\top, \varphi)$. In this program, a tautology $\top$ is represented as an empty Prolog \textit{list} {\mf [ ]}, so predicate {\mf undermining\_attack} is not only implied by {\mf successful\_attack}, but also a predicate which is used to check if the list of premises is empty.
+\begin{lstlisting}
+undermining_attack(argument(Premise,Conclusion),Defeating_circumstance) :-
+			presumption(argument(Premise,Conclusion)),
+			successful_attack(argument(Premise,Conclusion),Defeating_circumstance).
+\end{lstlisting}
 
 \section{Case study: Dutch tort law}
 
@@ -362,21 +380,44 @@ Figure 1 shows the arguments extracted from this model, according to the formali
 \item $(C, \geq) \vDash ico \leadsto imp$
 \end{itemize}
 
-The Dutch tort law model in the Prolog program is represented as {\mf model\_num(1)}. Through the verification given by predicate {\mf case\_model\_valid}, this model is a valid model, as shown in Figure 2. The queries about the arguments above in this model are shown in Figure 3.
+The Dutch tort law model in the Prolog program is represented as {\mf model\_num(1)}. Through the verification given by predicate {\mf case\_model\_valid}, this model is a valid model.
+\begin{lstlisting}
+?- case_model_valid(model_num(1)).
+true.
+\end{lstlisting}
 
-\begin{figure} [htbp]
-\centering
-\includegraphics [scale=0.5] {model1.png}
-\caption{The validity of Dutch tort law model}
-\end{figure}
+In this program, we use predicate {\mf successful\_attack} to check the validity of the successful attack $dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$ in the model. As the program shows, this attack is a rebutting attack, which means it is not undercutting. This judgement is corresponded to the analysis about the Dutch tort law model above.
+\begin{lstlisting}
+?- successful_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+true.
 
-\begin{figure} [htbp]
-\centering
-\includegraphics [scale=0.5] {ex_tort.png}
-\caption{The queries in Dutch tort law model}
-\end{figure}
+?- rebutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+true.
 
-The first query checks the validity of argument $dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$ in the model. As the second and third queries shows, this attack is a rebutting attack, which means it is not undercutting. This judgement is corresponded to the analysis about the Dutch tort law model above. From the fourth query to the last one, those presumptively valid argument shown above have been verified. According to the results of the program, all of these arguments are presumptively valid.
+?- undercutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+false.
+\end{lstlisting}
+
+In the same way, other arguments and attacks shown above can be successfully verified in the Prolog program.
+\begin{lstlisting}
+?- successful_attack(argument([vrt],[unl]),[jus]).
+true.
+
+?- successful_attack(argument([vst],[unl]),[jus]).
+true.
+
+?- presumptively_valid(argument([vun],[unl])).
+true.
+
+?- presumptively_valid(argument([ift],[imp])).
+true.
+
+?- presumptively_valid(argument([ila],[imp])).
+true.
+
+?- presumptively_valid(argument([ico],[imp])).
+true.
+\end{lstlisting}
 
 \section{Case study: Copyright infringement in Chinese Criminal Law}
 
@@ -453,7 +494,7 @@ If \textit{the amount of defendant's illegal gains was large or existed other se
 If \textit{the amount of defendant's illegal gains was huge or existed other especially serious circumstances}, then the defendant shall be sentenced to \textit{fixed-term imprisonment of not less that three years but not more than seven years and fined}, this can be represented as $crc \wedge ihe \Rightarrow m3fti \wedge fin$.
 
 There are two kinds of punishments which are possible to be put on probation, if the defendant satisfied the conditions of probation: 
-1. fixed-term imprisonment fo not more than 3 years and fined ($crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$); 2. criminal detention and fined ($crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$).
+1. fixed-term imprisonment of not more than 3 years and fined ($crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$); 2. criminal detention and fined ($crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$).
 
 According to Art. 217's relevant judicial explanations, there are 3 defeating circumstance: 1. The action is not belong to "without permission of the copyright owner"; 2. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a heavier punishment; 3. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a lighter punishment.
 
@@ -466,7 +507,7 @@ If we add these defeating circumstance to the rules we listed above, then some o
 
 In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 shows the scenario that although the defendant has published and copied the items shown in Art. 217:1 without the permission of the copyright owner, he still will not be considered as copyright infringement because his action is not belong to "without permission of the copyright owner". Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits, so he will not be judge through Art. 217.
 
-From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 4 lists cases from Case 1 to Case 13. Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different.
+From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 4 lists cases from Case 1 to Case 13. Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different. In this model, Case 1 is the most preferred case, as we consider the "presumption of innocence" is the most important principle in the process of decision making. Besides, in some situations, the defendant will not be regarded as violating someone else's copyright, for instance, the defendant's action is not belong to "without permission of the copyright owner" or his purpose is not for making profits. In this model, these situations are also very important. So we put them in second place. The rest of cases in the preferred relation are the specific punishments of copyright infringement, we put them in third place.
 
 \footnotesize
 \begin{table}[htb]
@@ -489,13 +530,13 @@ From Case 4 to Case 13, different punishments for the defendant's action in Art.
 13	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\
 14	& ... ... \\ 
 \hline
-Order & case 1 $>$ case 2 = case 3 = case 14 = case 25 = case 36 $>$ case 4 = case 5 = case 7 = case 8 = case 15 = case 16 = case 18 = case 19 = case 26 = case 27 = case 29 = case 30 = case 37 = case 38 = case 40 = case 41 $>$ case 6 = case 9 = case 10 = case 11 = case 12 = case 13 = case 17 = case 20 = case 21 = case 22 = case 23 = case 24 = case 28 = case 31 = case 32 = case 33 = case 34 = case 35 = case 39 = case 42 = case 43 = case 44 = case 45 = case 46\\
+Order & case 1 $>$ case 2 = case 3 = case 14 = case 25 = case 36 $>$ case 4 = case 5 = case 7 = case 8 = case 15 = case 16 = case 18 = case 19 = case 26 = case 27 = case 29 = case 30 = case 37 = case 38 = case 40 = case 41 = case 6 = case 9 = case 10 = case 11 = case 12 = case 13 = case 17 = case 20 = case 21 = case 22 = case 23 = case 24 = case 28 = case 31 = case 32 = case 33 = case 34 = case 35 = case 39 = case 42 = case 43 = case 44 = case 45 = case 46\\
 \hline
 \end{tabularx}
 \end{table}
 
 \normalsize
-From this copyright infringement model, we can get the argument diagram illustrated in Figure 4. This argument has multi-steps, and it is corresponding to the model we built.
+From this copyright infringement model, we can get the argument diagram illustrated in Figure 2. This argument has multi-steps, and it is corresponding to the model we built.
 
 \begin{figure} [htbp]
 \centering
@@ -519,21 +560,44 @@ According to the definitions of Verheij's case model formalism, the rule $pac \w
 \item $(C,  \subseteq) \models crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
 \end{itemize}
 
-The Chinese copyright infringement model is represented as {\mf model\_num(2)} in the program. Figure 5 shows that it is a valid model. The arguments and attacks shown above can be verified by this program.
+The Chinese copyright infringement model is represented as {\mf model\_num(2)} in the program. The following query shows that it is a valid model. Also, the arguments and attacks shown above can be verified by this program.
 
-\begin{figure} [htbp]
-\centering
-\includegraphics [scale=0.5] {model2.png}
-\caption{The validity of Chinese copyright infringement model}
-\end{figure}
+\begin{lstlisting}
+?- case_model_valid(model_num(2)).
+true.
 
-\begin{figure} [htbp]
-\centering
-\includegraphics [scale=0.5] {ex_copyright.png}
-\caption{The queries in Chinese copyright infringement model}
-\end{figure}
+?- successful_attack(argument([pac,ite,pco],[ifg]),[pec]).
+true.
 
-As Figure 6 shows, the program has verified that circumstance \textit{pec} successfully attack argument $pac \wedge ite \wedge pco \leadsto ifg$, and it is a rebutting attack, as well as the other arguments with defeating circumstances above which are also considered to be successful. The program also finds argument $epr \Rightarrow ifg$ and other three arguments to be conclusive. These results are corresponded to the analysis about Chinese copyright infringement model above.
+?- rebutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
+true.
+
+?- undercutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
+false.
+
+?- successful_attack(argument([crc,ils],[l3fti,fin]),[hps]).
+true.
+
+?- successful_attack(argument([crc,ils],[cdt,fin]),[hps]).
+true.
+
+?-successful_attack(argument([crc,ihe],[m3fti,fin]),[lps]).
+true.
+
+?- conclusive(argument([epr],[ifg])).
+true.
+
+?- conclusive(argument([pac,avp],[ifg])).
+true.
+
+?- conclusive(argument([ifg,fpp],[crc])).
+true.
+
+?- conclusive(argument([crc,l3fti,fin,cpb],[pbt])).
+true.
+\end{lstlisting}
+
+As the queries shows, the program has verified that circumstance \textit{pec} successfully attacks argument $pac \wedge ite \wedge pco \leadsto ifg$, and it is a rebutting attack, as well as the other arguments with defeating circumstances above which are also considered to be successful. The program also finds argument $epr \Rightarrow ifg$ and other three arguments to be conclusive. These results are corresponded to the analysis about Chinese copyright infringement model above.
 
 \section{Discussion and Conclusion}
 
