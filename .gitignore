@@ -8,3 +8,4 @@
 *.gz
 .DS_Store
 jurix2018.synctex.gz
+*.tps

@@ -96,11 +96,11 @@ The recent case model formalism \citep{Verheij2016Correct} is a hybrid theory sh
 
 The present paper provides a computational version of the case model formalism. A Prolog program is presented that can computationally check whether a case model is correct, whether rule-based arguments are valid (in the three kinds of validity coherence, conclusiveness and presumptiveness), and whether defeating circumstances are rebutting, undercutting or undermining. The computational tool can be used to support the manual modeling of a complex legal domain, making that more manageable. As an example, we provide a new domain model, namely Chinese copyright infringement law, both formally (as a case model) and computationally (in Prolog).
 
-\section{Verheij's case model formalism}
+\section{The case model formalism}
 
-\noindent Verheij's case model formalism was first introduced in \citep{Verheij2016Correct}. Verheij uses a classical formal logic  language $L$ generated from a set of propositional constants in a standard way. Verheij writes $\neg$ for negation, $\wedge$ for conjunction, $\vee$ for disjunction, $\leftrightarrow$ for equivalence, $\top$ for a tautology, and $\bot$ for a contradiction. The associated classical, deductive, monotonic consequence relation is denoted $\vDash$. Verheij assumes a finitely generated language. 
+\noindent The case model formalism was introduced in \citep{Verheij2016Correct}. The formalism uses a classical formal logical  language $L$ generated from a finite set of propositional constants in a standard way writing $\neg$ for negation, $\wedge$ for conjunction, $\vee$ for disjunction, $\leftrightarrow$ for equivalence, $\top$ for a tautology, and $\bot$ for a contradiction. The associated classical, deductive, monotonic consequence relation is denoted $\vDash$.  
 
-Verheij defines case models by the way of formalizing the idea of cases and their preferences. The cases in a case model must be logically consistent, mutually incompatible and different; and the comparison relation must be total and transitive. Here follows the definitions of case models addressed by Verheij.
+Case models formalize cases and their ordering. The cases in a case model must be logically consistent, mutually incompatible and different; and the comparison relation must be total and transitive. Here follow the core definitions.
 
 \textbf{Definition 2.1}: A \textit{case model} is a pair $(C,  \geq)$ with finite $C \in L$, such that the following hold, for all $\varphi$, $\psi$ and $\chi \in C$: 
 \begin{enumerate}
