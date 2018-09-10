@@ -419,6 +419,25 @@ true.
 true.
 \end{lstlisting}
 
+\begin{lstlisting}
+case(model_num(1),case_num(101),C) :- C = [not(dmg)].
+case(model_num(1),case_num(102),C) :- C = [not(dut),dmg,not(unl),not(vrt),not(vst),not(vun)].
+case(model_num(1),case_num(103),C) :- C = [not(dut),dmg,unl,not(imp),not(ift),not(ila),not(ico)].
+case(model_num(1),case_num(104),C) :- C = [not(dut),dmg,unl,imp,not(cau)].
+case(model_num(1),case_num(105),C) :- C = [dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp].
+case(model_num(1),case_num(106),C) :- C = [dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),ila,not(ico),not(jus),prp].
+case(model_num(1),case_num(107),C) :- C = [dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),not(ila),ico,not(jus),prp].
+case(model_num(1),case_num(108),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),ift,not(ila),not(ico),not(jus),prp].
+case(model_num(1),case_num(109),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),ila,not(ico),not(jus),prp].
+case(model_num(1),case_num(110),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),not(ila),ico,not(jus),prp].
+case(model_num(1),case_num(111),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,ift,not(ila),not(ico),not(jus),prp].
+case(model_num(1),case_num(112),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),ila,not(ico),not(jus),prp].
+case(model_num(1),case_num(113),C) :- C = [dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),not(ila),ico,not(jus),prp].
+case(model_num(1),case_num(114),C) :- C = [not(dut),dmg,not(unl),vrt,not(vst),jus].
+case(model_num(1),case_num(115),C) :- C = [not(dut),dmg,not(unl),not(vrt),vst,jus].
+case(model_num(1),case_num(116),C) :- C = [not(dut),dmg,unl,imp,cau,vst,not(prp)].
+\end{letlisting}
+
 \section{Case study: Copyright infringement in Chinese Criminal Law}
 
 %FIRST: Explain the law informally
