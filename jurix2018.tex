@@ -154,120 +154,37 @@ Verheij has also defined some kinds of argument attacking in his formalism\citep
 
 %QUESTION: Did you define `defeating/successfully attacking circumstances' in Prolog? Section 5 of ICAIL 2017 paper. And: rebutting/undercutting/undermining? 
 
-\noindent We have implemented the case model formalism in Prolog. We use the previously developed model of Dutch tort law~\cite{Verheij2017Formalizing} as an illustration. Cases are represented as Prolog lists, of which the elements consist of strings and their negations (represented using {\mf not/1}). For instance, {\mf [not(dut),dmg,unl,imp,not(cau)]} represents the case in which there is no duty ({\mf not(dut)}) to repair the damages ({\mf dmg}) although the act is unlawful ({\mf unl}) and imputable ({\mf imp]}), but there is no causality ({\mf not(cau)}). Case models are represented as lists of cases and their ordering, where case models and cases are referred to using identifiers. Here is a part of the representation of the case model for Dutch tort law ({\mf model\_num(1)}). 
-\begin{lstlisting}
-case(model_num(1),case_num(101),[not(dmg)]).
-...
-case(model_num(1),case_num(104),[not(dut),dmg,unl,imp,not(cau)]).
-case(model_num(1),case_num(105),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp]).
-...
+\noindent We have implemented the case model formalism in Prolog. We use the previously developed model of Dutch tort law~\cite{Verheij2017Formalizing} as an illustration. Cases are represented as Prolog lists, of which the elements consist of strings and their negations (represented using {\mf not/1}). For instance, {\mf [not(dut),dmg,unl,imp,not(cau)]} represents the case in which there is no duty ({\mf not(dut)}) to repair the damages ({\mf dmg}) although the act is unlawful ({\mf unl}) and imputable ({\mf imp]}), but there is no causality ({\mf not(cau)}). Case models are represented as lists of cases and their ordering, where case models and cases are referred to using identifiers. 
+	\begin{lstlisting}[caption={Definition of the Dutch tort law case model in Prolog},captionpos=b,float]
+	case(model_num(1),case_num(101),[not(dmg)]).
+	...
+	case(model_num(1),case_num(104),[not(dut),dmg,unl,imp,not(cau)]).
+	case(model_num(1),case_num(105),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp]).
+	...
+	case(model_num(1),case_num(114),[not(dut),dmg,not(unl),vrt,not(vst),jus]).
+	...
+	case_order(model_num(1),[case_num(101),case_num(102),case_num(103),case_num(104),[case_num(105),case_num(106),...,case_num(113)],...]).
+	\end{lstlisting}
 
-case_order(model_num(1),[case_num(101),case_num(102),case_num(103),case_num(104),[case_num(105),case_num(106),...,case_num(113)],...]).
-\end{lstlisting}
+Listing 1 provides a part of the representation of the case model for Dutch tort law ({\mf model\_num(1)}). 
+The representation of the case model starts with a series of definitions of cases followed by the ordering. Here {\mf case\_num(104)} is the non-causality case just discussed. The full model consists of the 16 cases discussed in~\cite{Verheij2017Formalizing}. The ordering is represented as a list of cases and lists of cases, each representing an equivalence class of the total preorder, in decreasing level of preference. Hence the first element of this list represents the case or cases that are maximal in the total preorder. Here there is one maximal case {\mf case\_num(101): not(dmg)}, representing that there are no damages. When an equivalence class consists of several cases, such as {\mf [case\_num(105),...,case\_num(113)]}, it is represented as a list of cases (actually: of case identifiers).
 
-Here {\mf case\_num(104)} is the non-causality case just discussed. The full model consists of the 16 cases discussed in~\cite{Verheij2017Formalizing}. The ordering is represented as a list of cases and lists of cases, each representing an equivalence class of the total preorder, in decreasing level of preference. Hence the first element of this list represents the case or cases that are maximal in the total preorder. Here there is one maximal case {\mf case\_num(101): not(dmg)}, representing that there are no damages. When an equivalence class consists of several cases, such as {\mf [case\_num(105),...,case\_num(113)]}, it is represented as a list of cases (actually: of case identifiers).
-
-The predicate {\mf case\_model\_valid} checks whether a case model fulfills the definition, i.e. whether cases are consistent, incompatible and different. Consistency is determined by checking whether a case contains an element and its negation. For instance, a case {\mf [not(dmg), dmg]} would not be consistent. This straightforward way of consistency checking is allowed by our use of a language of elementary literals instead of a full propositional language. Incompatibility and difference are checked by determining for every pair of cases whether there is a distinguishing element, i.e., there is an element in one case of which the negation is in the other. For instance, cases 
+The predicate {\mf case\_model\_valid/1} (with a case identifier as single argument) checks whether a case model fulfills the definition, i.e. whether all cases are consistent, incompatible and different (cf. Definition 2.1 above). Consistency is determined by checking whether a case contains an element and its negation. For instance, a case {\mf [not(dmg), dmg]} would not be consistent. This straightforward way of consistency checking is allowed by our use of a language of elementary literals instead of a full propositional language. Incompatibility is checked by determining for every pair of cases whether there is an element in one case of which the negation is in the other. For instance, cases 
 {\mf case\_num(101): not(dmg)} and 
-{\mf case\_num(104): not(dut),dmg,...} can be distinguished by {\mf not(dmg)} and {\mf dmg}, hence are incompatible and different. 
+{\mf case\_num(104): not(dut),dmg,...} can be distinguished by {\mf not(dmg)} and {\mf dmg}, hence are incompatible. Difference is checked by determining for every pair of cases whether there is an element in one case that is not in the other. Note that a pair of incompatible cases implies that they are different. Checking elements 4 and 5 in the formal definition of case models is not directly representd since we use an explicit representation of the total preorder as a list of equivalence classes. In this representation another validity check is helpful, namely whether each case of which an identifier appears in the ordering is defined and whether each case identifier of a defined case appears in the ordering exactly once. This check has been implemented using the predicate {\mf ordering\_valid/1}.
+
+Arguments are represented by a list of premises and a list of conclusions. For instance, {\mf argument([dmg,unl,imp,cau],[dut])} represents the argument to the one-element conclusion that there is a duty to repair the damages ({\mf dut}) from the four-element premises that there are damages ({\mf dmg}) by an unlawful act ({\mf unl}) that is imputable ({\mf imp}) to the actor and that has caused the damages ({\mf cau}).
+
+The three kinds of validity of arguments can be checked using the predicates {\mf coherent/1}, {\mf conclusive/1} and {\mf presumptively\_valid/1}, each taking an argument (represented using {\mf argument/2}) as input. Coherence is checked by first determining the case made by an argument, found by appending the list of premises to the list of conclusions, and then checking whether there is a case in the case model that contains all elements of the case made by the argument. For instance, {\mf argument([dmg,unl,imp,cau],[dut]))} is coherent by the case with identifier {\mf 105} whereas {\mf argument([dmg],[not(dmg)])} is not as its case made is not consistent.
+
+The conclusiveness of an argument is checked by first checking whether the argument is coherent and then checking, if all cases in the case model that contain the argument's premises also contain its conclusions. For instance, {\mf argument([dmg],[dut])} is coherent (e.g., by case {\mf 105}) but not conclusive (by case {\mf 104}). The argument {\mf argument([dut],[dmg])} is conclusive since it is coherent (e.g., by {\mf 105}) and indeed all cases of {\mf dut} are also cases of {\mf dmg}.
+
+Presumptive validity of an argument is checked by first determining a case that makes the case coherent (i.e., finding a case in which both the premises and the conclusions of the argument hold) and then checking for each case in which the argument's premises hold whether such a case is of equal or lower ordering. For instance, {\mf argument([vrt],[unl]))} is presumptively valid. However the coherent argument {\mf argument([vrt],[not(unl)]))} is not presumptively valid since cases that show the coherence of the argument (such as case {\mf 114}) are not maximal among the cases in which the premises hold (e.g., case {\mf 105} is higher in the ordering).
+
+Attack of arguments has been implemented using the predicates {\mf successful\_attack/2}, {\mf rebutting\_attack/2} and {\mf undercutting\_attack/2}. {\mf successful\_attack/2} takes an argument and defeating circumstances as input and checks whether the argument is presumptively valid and whether the argument to the same conclusions but from the premises with the defeating circumstances appended is also presumptively valid.
 
 
 
-The program uses predicate {\mf coherent} to examine coherent arguments. This predicate is implied by {\mf coherent\_casemade}, which is a recursive predicate that uses {\mf member\_list} to check if the \textit{case made} by the argument in queries is logically implied by at least one case in the case list.
-\begin{lstlisting}
-coherent_casemade(Premise,Conclusion,[Case_num|Other_cases]) :-
-			case(Case_num,Case),
-			append(Premise,Conclusion,Casemade),
-			member_list(Casemade,Case);
-			coherent_casemade(Premise,Conclusion,Other_cases).
-
-coherent(argument(Premise,Conclusion)) :-
-			case_list(Case_list),
-			coherent_casemade(Premise,Conclusion,Case_list).
-\end{lstlisting}
-
-This program uses predicate {\mf conclusive} to verify the argument $(\varphi, \psi)$ in the case model $(C, \geq)$ that considered to be conclusive. According to Verheij's formalism, a conclusive argument must be coherent. In addition, if all cases in the model imply the argument's premises also imply its conclusions. In this sense, we use predicate {\mf conclusive\_casemade} to check if a case implies the argument's premises, whether it also implies the \textit{case made} by the argument. For each case in the model, we use predicate {\mf conclusive\_case\_check} to examine if it is a case implies both the premises of the argument and the case made by the argument or it doesn't imply the premises of the argument.
-The implication of this predicate is {\mf conclusive\_list}, a recursive predicate, which uses {\mf conclusive\_case\_check} to check every case in the case list. If the result of this predicate is {\mf true}, then we can say all cases in the case model imply the premises of the argument also imply its conclusions.
-\begin{lstlisting}
-case_with_casemade(Premise,Conclusion,Case_num) :-
-		case(Case_num,Case),
-		append(Premise,Conclusion,Casemade),
-		member_list(Premise,Case),
-		member_list(Casemade,Case).
-
-conclusive_case_check(Premise,Conclusion,Case_num) :-
-		case_with_casemade(Premise,Conclusion,Case_num);
-		case(Case_num,Case),
-		not(member_list(Premise,Case)).
-
-conclusive_case_list_check(Premise,Conclusion,[Case_num|Other_cases]) :-
-			conclusive_case_check(Premise,Conclusion,Case_num),
-			conclusive_case_list_check(Premise,Conclusion,Other_cases).
-
-conclusive(argument(Premise,Conclusion)) :-
-				coherent(argument(Premise,Conclusion)),
-				case_list(Case_list),
-				conclusive_case_list_check(Premise,Conclusion,Case_list).
-\end{lstlisting}
-
-The presumptively valid argument $(\varphi, \psi)$ in the case model $(C, \geq)$ will use predicate {\mf presumptively\_valid} to verify. The program uses {\mf coherent} to check if the argument is coherent. Predicate {\mf best\_case\_casemade} is going to select the most preferred case in the model which contains the case made by the argument. This predicate uses {\mf best\_case\_casemade\_basic} to check whether the case implies the case made by the argument, if so, variable {\mf Best\_case\_casemade} will be assigned a value of the number of this case, i.e., {\mf Case\_num}.
-\begin{lstlisting}
-best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade) :-
-		case(Case_num,Case),
-		append(Premise,Conclusion,Casemade),
-		member_list(Casemade,Case),
-		Best_case_casemade = Case_num.
-
-best_case_casemade(Premise,Conclusion,[Case_num|Other_cases],Best_case_casemade) :-
-		best_case_casemade_basic(Premise,Conclusion,Case_num,Best_case_casemade);
-		best_case_casemade(Premise,Conclusion,Other_cases,Best_case_casemade).
-\end{lstlisting}
-
-About the most preferred case implied the case made, according to the definition of case order, there is a situation must be considered, that is some cases in the model are as preferred as this case, which means these cases are in a Prolog \textit{sublist}. 
-Predicate {\mf best\_case\_premise} is used to compare the best case implied the case made by the argument (i.e. {\mf Best\_case\_casemade}) with the cases implied the premises of the argument. In terms of the definition of \textit{presumptively valid arguments}, if the argument is presumptively valid, then the case represented by {\mf Best\_case\_casemade} should be at least as preferred as all cases implied the premises of the argument. As mentioned above, in {\mf best\_case\_premise}, there are 3 situations can let the program return {\mf true},
-\begin{enumerate}
-\item The most preferred case implied the premises is the same as the best case implied the case made, and this case is an element of the case order list;
-\item The most preferred case implied the premises is the same or as preferred as the best case implied the case made, and these cases are in a sublist of the case order list;
-\item All other cases implied the premises are less preferred than the best case implied the case made.
-\end{enumerate}
-
-Predicate {\mf best\_case\_premise\_sublist}, {\mf best\_case\_premise\_element} and their implication {\mf best\_case\_premise\_basic} are used to deal with the third situation:
-\begin{itemize}
-\item If the {\mf Element} is not the best case implied the case made, {\mf best\_case\_premise \_element} will check if it contains the premises of the argument; 
-\item If the {\mf Element} is a sublist, and the best case implied the case made is not a member of it, {\mf best\_case\_premise\_sublist} will make sure that all cases in this sublist do not contain the premises of the argument.
-\end{itemize}
-\begin{lstlisting}
-comparison_premise_sublist(Premise,[Case_num|Other_cases]) :-
-			is_list([Case_num|Other_cases]),
-			case(Case_num,Case),
-			not(member_list(Premise,Case)),
-			comparison_premise_sublist(Premise,Other_ cases).
-
-comparison_premise_case(Premise,Case_num) :-
-			case(Case_num,Case),
-			not(member_list(Premise,Case)).
-
-comparison_premise_basic(Premise,Element) :-
-	comparison_premise_sublist(Premise,Element);
-	comparison_premise_case(Premise,Element).
-
-comparison_premise(Best_case_casemade,Premise,[Element|Other_cases]) :-
-		Best_case_casemade = Element;
-		member(Best_case_casemade,Element);
-		comparison_premise_basic(Premise,Element),
-		comparison_premise(Best_case_casemade,Premise,Other_cases).
-\end{lstlisting}
-
-Predicate {\mf presumptively\_valid} is implied by a series of predicates. Through this predicate, we can use {\mf coherent} to check the coherence of the argument, and then use {\mf best\_case\_casemade} to select the most preferred case implied the case made by the argument, and compare this case with other cases implied the premises which can be implemented by {\mf comparison\_premise}.
-
-\begin{lstlisting}		
-presumptively_valid(argument(Premise,Conclusion)) :-
-				coherent(argument(Premise,Conclusion)),
-				case_order(Case_order),
-				case_list(Case_list),
-				best_case_casemade(Premise,Conclusion,Case_list,Best_case_casemade),
-				comparison_premise(Best_case_casemade,Premise,Case_order).
-\end{lstlisting}
 
 For an argument $(\varphi, \psi)$ with defeating circumstances $\chi$ in the case model $(C, \geq)$, we use predicate {\mf successful\_attack} to check if it is a successful attack. According to the definition of \textit{successful attack}, argument $(\varphi, \psi)$ must be presumptively valid. When the defeating circumstances $\chi$ are added, the argument $(\varphi \wedge \chi, \psi)$ will become invalid. We can used predicate {\mf presumptively\_valid} to implement this definition.
 \begin{lstlisting}
