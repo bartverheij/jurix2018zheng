@@ -166,7 +166,7 @@ duplicate_case(Cases_list,[Case|Cases_set]) :-
 
 % If there is a missing case, the length of these two list will be different. If there is a case which is not defined, the member_list will return false, because it is not a member of cases set.
 
-case_order_validity(model_num(N)) :-
+ordering_valid(model_num(N)) :-
 				cases_without_preference(model_num(N),Cases_list),
 				cases_set(model_num(N),Cases_set),
 				member_list(Cases_list,Cases_set),
@@ -249,7 +249,7 @@ case_model_valid(model_num(N)) :-
 			case_model_consistent(model_num(N)),
 			case_model_incompatible(model_num(N)),
 			case_model_different(model_num(N)),
-			case_order_validity(model_num(N)),!.
+			ordering_valid(model_num(N)),!.
 
 %-------------------------------------------------------------------------------------
 % Definition 3
