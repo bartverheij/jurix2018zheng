@@ -229,7 +229,7 @@ In order to recognize the propositions in the case model easily, each elementary
 \begin{table}[htbp]
 \caption{Elementary propositions in the case model of copyright infringement}
 \centering
-\begin{tabularx}{110mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
+\begin{tabularx}{120mm}{>{\hsize=0.2\hsize}X>{\hsize=1.6\hsize}X}
 \hline
 ifg & copyright infringement\\
 fpp & for the purpose of making profits\\
@@ -282,7 +282,7 @@ If we add these defeating circumstance to the rules we listed above, then some o
 \begin{itemize}
 \item $pac \wedge ite \wedge pco \leadsto ifg \times pec$
 \item $crc \wedge ils \leadsto l3fti \wedge fin \times hps$
-\item $crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
+\item $crc \wedge ihe \Rightarrow m3fti \wedge fin \times lps$
 \end{itemize}
 
 In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 shows the scenario that although the defendant has published and copied the items shown in Art. 217:1 without the permission of the copyright owner, he still will not be considered as copyright infringement because his action is not belong to "without permission of the copyright owner". Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits, so he will not be judge through Art. 217.
@@ -322,14 +322,13 @@ From Case 4 to Case 13, different punishments for the defendant's action in Art.
 \normalsize
 From this copyright infringement model, we can get the argument diagram illustrated in Figure 2. This argument has multi-steps, and it is corresponding to the model we built.
 
-\begin{figure*}[btp]
-	\scalebox{0.8}{\input{img/copyright.tex}}
-\caption{The Chinese copyright infringement model: argument structure (left); in Prolog (right)}
-\label{fig:tort}
-\end{figure*}
+\begin{figure} [htbp]
+\centering
+\includegraphics [scale=0.32] {argument_diagram1.jpg}
+\caption{Arguments and their attacks in the case model of Chinese copyright infringement}
+\end{figure}
 
-According to the definitions of Verheij's case model formalism, the rule $ifg \wedge fpp \Rightarrow crc$ is valid in this model. As the model shows, Case and case 15 implicate sentence $epr \wedge ifg$ which is the case made by the argument $(epr, ifg)$, so this argument is coherent. Besides, all the cases which imply the premise $epr$, also imply the conclusion $ifg$. So argument $(epr, ifg)$ is conclusive in the case model. And these arguments are also conclusive in the model:
-%According to the definitions of Verheij's case model formalism, the rule $epr \Rightarrow ifg$ is valid in this model. As the model shows, case 14 and case 15 implicate sentence $epr \wedge ifg$ which is the case made by the argument $(epr, ifg)$, so this argument is coherent. Besides, all the cases which imply the premise $epr$, also imply the conclusion $ifg$. So argument $(epr, ifg)$ is conclusive in the case model. And these arguments are also conclusive in the model:
+According to the definitions of Verheij's case model formalism, the rule $epr \Rightarrow ifg$ is valid in this model. As the model shows, case 14 and case 15 implicate sentence $epr \wedge ifg$ which is the case made by the argument $(epr, ifg)$, so this argument is coherent. Besides, all the cases which imply the premise $epr$, also imply the conclusion $ifg$. So argument $(epr, ifg)$ is conclusive in the case model. And these arguments are also conclusive in the model:
 
 \begin{itemize}
 \item $(C,  \geq) \models pac \wedge avp \Rightarrow ifg$
@@ -367,40 +366,40 @@ case_order(model_num(2),[case_num(201),[case_num(202),case_num(203), ...],[case_
 
 The following query shows that it is a valid model. Also, the arguments and attacks shown above can be verified by this program.
 
-%\begin{lstlisting}
-%?- case_model_valid(model_num(2)).
-%true.
-%
-%?- successful_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%true.
-%
-%?- rebutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%true.
+\begin{lstlisting}
+?- case_model_valid(model_num(2)).
+true.
 
-%?- undercutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%false.
+?- successful_attack(argument([pac,ite,pco],[ifg]),[pec]).
+true.
 
-%?- successful_attack(argument([crc,ils],[l3fti,fin]),[hps]).
-%true.
+?- rebutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
+true.
 
-%?- successful_attack(argument([crc,ils],[cdt,fin]),[hps]).
-%true.
+?- undercutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
+false.
 
-%?-successful_attack(argument([crc,ihe],[m3fti,fin]),[lps]).
-%true.
+?- successful_attack(argument([crc,ils],[l3fti,fin]),[hps]).
+true.
 
-%?- conclusive(argument([epr],[ifg])).
-%true.
+?- successful_attack(argument([crc,ils],[cdt,fin]),[hps]).
+true.
 
-%?- conclusive(argument([pac,avp],[ifg])).
-%true.
+?-successful_attack(argument([crc,ihe],[m3fti,fin]),[lps]).
+true.
 
-%?- conclusive(argument([ifg,fpp],[crc])).
-%true.
+?- conclusive(argument([epr],[ifg])).
+true.
 
-%?- conclusive(argument([crc,l3fti,fin,cpb],[pbt])).
-%true.
-%\end{lstlisting}
+?- conclusive(argument([pac,avp],[ifg])).
+true.
+
+?- conclusive(argument([ifg,fpp],[crc])).
+true.
+
+?- conclusive(argument([crc,l3fti,fin,cpb],[pbt])).
+true.
+\end{lstlisting}
 
 As the queries shows, the program has verified that circumstance \textit{pec} successfully attacks argument $pac \wedge ite \wedge pco \leadsto ifg$, and it is a rebutting attack, as well as the other arguments with defeating circumstances above which are also considered to be successful. The program also finds argument $epr \Rightarrow ifg$ and other three arguments to be conclusive. These results are corresponded to the analysis about Chinese copyright infringement model above.
 
