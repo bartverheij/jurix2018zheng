@@ -1,0 +1,86 @@
+	\begin{tikzpicture}	[every text node part/.style={align=center},
+		arg/.style={
+%			draw,
+			%rectangle,
+			%-{Straight Barb[angle=60:6pt 0]}
+		},
+		attack/.style={
+			-{Rays[sep=-2.25pt,width=6pt,length=6pt]}
+		}
+	]
+
+		\begin{scope}
+		
+		\pgftransformxscale{0.8}
+		\pgftransformyscale{0.6}
+
+
+			\node[arg] (s1) at (0,0) {dut};
+			\node[arg] (s2) at (2,-1) {vst};
+			\node[arg] (s3) at (2,-2) {$\neg$prp};
+			\node[arg] (s4) at (1,-3) {dmg};
+			\node[] (s5) at (1,-4) {unl};
+%				\draw[] (0.65,-3.75) rectangle (3.5,-4.25);
+			\node[arg] (s6) at (4,-5) {jus};
+			\node[arg] (s7) at (4,-6) {vrt};
+			\node[arg] (s8) at (3,-7) {jus};
+			\node[arg] (s9) at (3,-8) {vst};
+			\node[arg] (s10) at (2,-9) {vun};
+			\node[] (s11) at (1,-10) {imp};
+%				\draw[] (0.65,-9.75) rectangle (3.5,-10.25);
+			\node[arg] (s12) at (4,-11) {ift};
+			\node[arg] (s13) at (3,-12) {ila};
+			\node[arg] (s14) at (2,-13) {ico};
+			\node[arg] (s15) at (1,-14) {cau};
+
+		\draw[arg] (0, -14) -- (s1);
+		\draw[] (0, -14) -- (s15);
+		\draw[] (0, -3) -- (s4);
+		\draw[] (0, -4) -- (s5);
+		\draw[] (0, -10) -- (s11);
+		\draw[] (0, -14) -- (s15);
+
+		\draw[attack] (s2) -- (0,-1);
+		\draw[] (s3) -- (1,-2);
+		\draw[] (1,-1) -- (1,-2);
+
+		%\draw[arg] (1, -9) -- (1,-4.25);
+		%\draw[arg] (2, -8) -- (2,-4.25);
+		%\draw[arg] (3, -6) -- (3,-4.25);
+		\draw[arg] (1, -9) -- (s5);
+		\draw[arg] (2, -8) -- (s5);
+		\draw[arg] (3, -6) -- (s5);
+		\draw[] (1, -9) -- (s10);
+		\draw[] (2, -8) -- (s9);
+		\draw[] (3, -6) -- (s7);
+
+		\draw[attack] (s8) -- (1.75,-7);
+		\draw[attack] (s6) -- (2,-5);
+
+		%\draw[arg] (1, -13) -- (1,-10.25);
+		%\draw[arg] (2, -12) -- (2,-10.25);
+		%\draw[arg] (3, -11) -- (3,-10.25);
+		\draw[arg] (1, -13) -- (s11);
+		\draw[arg] (2, -12) -- (s11);
+		\draw[arg] (3, -11) -- (s11);
+		\draw[] (1, -13) -- (s14);
+		\draw[] (2, -12) -- (s13);
+		\draw[] (3, -11) -- (s12);
+
+		\node[right] at (6,0) {{\mf presumptively\_valid([dmg,unl,imp,cau],[dut]).}};
+		\node[right] at (6,-1) {~~~~{\mf rebutting\_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).}};
+
+		\node[right] at (6,-6) {{\mf presumptively\_valid(argument([vrt],[unl])).}};
+			\node[right] at (6,-5) {~~~~{\mf rebutting\_attack(argument([vrt],[unl]),[jus]).}};
+		\node[right] at (6,-8) {{\mf presumptively\_valid(argument([vst],[unl])).}};
+			\node[right] at (6,-7) {~~~~{\mf rebutting\_attack(argument([vst],[unl]),[jus]).}};
+		\node[right] at (6,-9) {{\mf conclusive(argument([vun],[unl])).}};
+		\node[right] at (6,-11) {{\mf conclusive(argument([ift],[imp])).}};
+		\node[right] at (6,-12) {{\mf conclusive(argument([ila],[imp])).}};
+		\node[right] at (6,-13) {{\mf conclusive(argument([ico],[imp])).}};
+
+
+
+		\end{scope}
+
+	\end{tikzpicture}
