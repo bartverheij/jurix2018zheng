@@ -18,6 +18,10 @@
 \setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=0pt}
 \setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=0pt}
 
+%for images
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,arrows.meta,decorations.markings}
+
 \DeclareFixedFont{\mf}{T1}{cmbr}{m}{n}{10pt}
 
 \lstset{ %
@@ -185,162 +189,173 @@ Attack of arguments has been implemented using the predicates {\mf successful\_a
 
 The three kinds of attack---rebutting, undercutting and undermining---are defined in terms of successful attack as follows. Rebutting attack requires a successful attack of an argument such that also the argument from the premises to the opposite of the argument's conclusion is presumptively valid. Note that this only makes sense for arguments with a single element as conclusion as we have not defined the negation of a series of conclusions. For instance, {\mf rebutting\_attack(argument([vrt],[unl]), [jus])} holds since it represents a successful attack and also argument([vrt],[not(unl)]) is presumptively valid. Successful attacks that are not rebutting attacks are undercutting. Undermining attack is a special kind of successful attack, namely an attack of an argument with a tautology as premise. In the program, a tautology is represented as an empty Prolog list {\mf [ ]}.
 
-\section{Case study: Dutch tort law}
+The Prolog program can be used to validate hand-made domain models, such as the case model for Dutch tort law of~\cite{Verheij2017Formalizing}. In Figure~\ref{fig:tort}, we show the argument structure that is valid in the hand-made formal case model of that paper (left). On the right, we show Prolog clauses that all evaluate to true given the Prolog version of that case model (partially shown in Listing 1). Each supporting arrow (with a normal arrow head) evaluates as a presumptively valid argument, as expected, some even more strongly as a conclusive argument. Each attacking arrow (ending in a cross) evaluates as a successful attack, in fact all attacks in this model are rebutting attacks. In other words, the model is computationally validated.
 
-%FIRST: Explain the law informally (brief)
-
-%SECOND: Show arguments + attacks and the associated case model
-
-%THIRD: Show the Prolog implementation, in particular: show the validity of the arguments + attacks
-
-\noindent The case model of Dutch tort law was built by Verheij in 2017\citep{Verheij2017Formalizing}. This model applied two articles 6:162 and 6:163 of the Dutch civil code (in the Netherlands referred to as Art. 6:162 and 6:163 BW, BW for 'Burgerlijk Werboek') govern the handling of wrongful acts. Here follows the translation by \citep{Betlem1993Civil}:
-
-\begin{itemize}
-\item \textbf{Art. 6:612 BW.} 1. A person who commits an unlawful act toward another which can be imputed to him, must repair the damage which the other person suffers as a consequence thereof.
-
-2. Except where there is a ground of justification, the following acts are deemed to be unlawful: the violation of a right, an act or omission violating a statutory duty or a rule of unwritten law pertaining to proper social conduct.
-
-3. An unlawful act can be imputed to its author if it results from his fault or from a cause for which he is answerable according to law or common opinion.
-
-\item \textbf{Art. 6:613 BW.} There is no obligation to repair damage when the violated norm does not have as its purpose the protection from damage such as that suffered by the victim.
-\end{itemize}
-
-Verheij built a case model for these two articles in his paper presented in ICAIL 2017\citep{Verheij2017Formalizing}, he gave each elementary proposition in the case model an abbreviation. These propositions will be listed in Table 1.
-
-\footnotesize
-\begin{table}[htb]
-\caption{Elementary propositions for the tort law domain}
-\centering
-\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-\hline
-dut	&	There is a duty to repair someone's damages\\
-dmg	&	Someone has suffered damages by someone else's act.\\
-unl	&	The act committed was unlawful\\
-imp	&	The act can be imputed to the person that committed the act\\
-cau	&	The act caused the suffered damages\\
-vrt	&	The act is a violation of someone’s right.\\
-vst	&	The act is a violation of a statutory duty\\
-vun	&	The act is a violation of unwritten law against proper social conduct\\
-jus	&	There exist grounds of justification\\
-ift	&	The act is imputable to someone because of the person's fault\\
-ila	&	The act is imputable to someone because of law\\
-ico	&	The act is imputable to someone because of common opinion\\
-prp	&	The violated statutory duty does not have the purpose to prevent the damages\\ \hline
-\end{tabularx}
-\end{table}
-\normalsize
+\begin{figure*}[btp]
+	%\centering
+	\scalebox{0.8}{\input{img/tort.tex}}
+\caption{The Dutch tort law model: argument structure (left); in Prolog (right)}
+\label{fig:tort}
+\end{figure*}
 
 
-There are 16 cases in this model which can be found in table 2.
-\footnotesize
-\begin{table}[htbp]
-\caption{The case list of the Dutch tort law model}
-\centering
-\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-\hline
-1	& $\neg$dmg \\
-2	& $\neg$dut, dmg, $\neg$unl, $\neg$vrt, $\neg$vst, $\neg$vun \\
-3	& $\neg$dut, dmg, unl, $\neg$imp, $\neg$ift, $\neg$ila, $\neg$ico \\
-4	& $\neg$dut, dmg, unl, imp, $\neg$cau\\
-5	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-6	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-7	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-8	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-9	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-10	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-11	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-12	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-13	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-14	&  $\neg$dut, dmg, $\neg$unl, vrt, $\neg$vst, jus\\
-15	&  $\neg$dut, dmg, $\neg$unl, $\neg$vrt, vst, jus\\
-16	&  $\neg$dut, dmg, unl, imp, cau, vst, $\neg$prp\\
-\hline
-Order & case 1 $>$ case 2 $>$ case 3 $>$ case 4 $>$ case 5 $\sim$ case 6 $\sim$ case 7 $\sim$ case 8 $\sim$ case 9 $\sim$ case 10 $\sim$ case 11 $\sim$ case 12 $\sim$ case 13 $>$ case 14 $\sim$ case 15 $\sim$ case 16 \\
-\hline 
-\end{tabularx}
-\end{table}
-\normalsize
 
-Figure 1 shows the arguments extracted from this model, according to the formalism's definitions, a series of arguments can be generated:
-
-\begin{figure} [htbp]
-\centering
-\includegraphics [scale=0.3] {figure1.png}
-\caption{Arguments and their attacks in the case model of Dutch tort law}
-\end{figure}
-
-\begin{itemize}
-\item $(C, \geq) \vDash dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$
-\item $(C, \geq) \vDash vrt \leadsto unl \times jus$
-\item $(C, \geq) \vDash vst \leadsto unl \times jus$
-\item $(C, \geq) \vDash vun \leadsto unl$
-\item $(C, \geq) \vDash ift \leadsto imp$
-\item $(C, \geq) \vDash ila \leadsto imp$
-\item $(C, \geq) \vDash ico \leadsto imp$
-\end{itemize}
-
-The Dutch tort law model in the Prolog program is represented as {\mf model\_num(1)}. The following codes show the representation of the tort law model in the program.
-\begin{lstlisting}
-case(model_num(1),case_num(101),[not(dmg)]).
-case(model_num(1),case_num(102)[,[not(dut),dmg,not(unl),not(vrt),not(vst),not(vun)]).
-case(model_num(1),case_num(103),[not(dut),dmg,unl,not(imp),not(ift),not(ila),not(ico)].
-case(model_num(1),case_num(104),[not(dut),dmg,unl,imp,not(cau)]).
-case(model_num(1),case_num(105),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp]).
-case(model_num(1),case_num(106),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),ila,not(ico),not(jus),prp]).
-case(model_num(1),case_num(107),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),not(ila),ico,not(jus),prp]).
-case(model_num(1),case_num(108),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),ift,not(ila),not(ico),not(jus),prp]).
-case(model_num(1),case_num(109),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),ila,not(ico),not(jus),prp]).
-case(model_num(1),case_num(110),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),not(ila),ico,not(jus),prp]).
-case(model_num(1),case_num(111),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,ift,not(ila),not(ico),not(jus),prp]).
-case(model_num(1),case_num(112),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),ila,not(ico),not(jus),prp]).
-case(model_num(1),case_num(113),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),not(ila),ico,not(jus),prp]).
-case(model_num(1),case_num(114),[not(dut),dmg,not(unl),vrt,not(vst),jus]).
-case(model_num(1),case_num(115),[not(dut),dmg,not(unl),not(vrt),vst,jus]).
-case(model_num(1),case_num(116),[not(dut),dmg,unl,imp,cau,vst,not(prp)]).
-
-case_order(model_num(1),[case_num(101),case_num(102),case_num(103),case_num(104),[case_num(105),case_num(106),case_num(107),case_num(108),case_num(109),case_num(110),case_num(111),case_num(112),case_num(113)],[case_num(114),case_num(115),case_num(116)]]).
-\end{lstlisting}
-
-Through the verification given by predicate {\mf case\_model\_valid}, this model is a valid model.
-\begin{lstlisting}
-?- case_model_valid(model_num(1)).
-true.
-\end{lstlisting}
-
-In this program, we use predicate {\mf successful\_attack} to check the validity of the successful attack $dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$ in the model. As the program shows, this attack is a rebutting attack, which means it is not undercutting. This judgement is corresponded to the analysis about the Dutch tort law model above.
-\begin{lstlisting}
-?- successful_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-true.
-
-?- rebutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-true.
-
-?- undercutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-false.
-\end{lstlisting}
-
-In the same way, other arguments and attacks shown above can be successfully verified in the Prolog program.
-\begin{lstlisting}
-?- successful_attack(argument([vrt],[unl]),[jus]).
-true.
-
-?- successful_attack(argument([vst],[unl]),[jus]).
-true.
-
-?- presumptively_valid(argument([vun],[unl])).
-true.
-
-?- presumptively_valid(argument([ift],[imp])).
-true.
-
-?- presumptively_valid(argument([ila],[imp])).
-true.
-
-?- presumptively_valid(argument([ico],[imp])).
-true.
-\end{lstlisting}
-
-
+%\section{Case study: Dutch tort law}
+%
+%%FIRST: Explain the law informally (brief)
+%
+%%SECOND: Show arguments + attacks and the associated case model
+%
+%%THIRD: Show the Prolog implementation, in particular: show the validity of the arguments + attacks
+%
+%\noindent The case model of Dutch tort law was built by Verheij in 2017\citep{Verheij2017Formalizing}. This model applied two articles 6:162 and 6:163 of the Dutch civil code (in the Netherlands referred to as Art. 6:162 and 6:163 BW, BW for 'Burgerlijk Werboek') govern the handling of wrongful acts. Here follows the translation by \citep{Betlem1993Civil}:
+%
+%\begin{itemize}
+%\item \textbf{Art. 6:612 BW.} 1. A person who commits an unlawful act toward another which can be imputed to him, must repair the damage which the other person suffers as a consequence thereof.
+%
+%2. Except where there is a ground of justification, the following acts are deemed to be unlawful: the violation of a right, an act or omission violating a statutory duty or a rule of unwritten law pertaining to proper social conduct.
+%
+%3. An unlawful act can be imputed to its author if it results from his fault or from a cause for which he is answerable according to law or common opinion.
+%
+%\item \textbf{Art. 6:613 BW.} There is no obligation to repair damage when the violated norm does not have as its purpose the protection from damage such as that suffered by the victim.
+%\end{itemize}
+%
+%Verheij built a case model for these two articles in his paper presented in ICAIL 2017\citep{Verheij2017Formalizing}, he gave each elementary proposition in the case model an abbreviation. These propositions will be listed in Table 1.
+%
+%\footnotesize
+%\begin{table}[htb]
+%\caption{Elementary propositions for the tort law domain}
+%\centering
+%\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
+%\hline
+%dut	&	There is a duty to repair someone's damages\\
+%dmg	&	Someone has suffered damages by someone else's act.\\
+%unl	&	The act committed was unlawful\\
+%imp	&	The act can be imputed to the person that committed the act\\
+%cau	&	The act caused the suffered damages\\
+%vrt	&	The act is a violation of someone’s right.\\
+%vst	&	The act is a violation of a statutory duty\\
+%vun	&	The act is a violation of unwritten law against proper social conduct\\
+%jus	&	There exist grounds of justification\\
+%ift	&	The act is imputable to someone because of the person's fault\\
+%ila	&	The act is imputable to someone because of law\\
+%ico	&	The act is imputable to someone because of common opinion\\
+%prp	&	The violated statutory duty does not have the purpose to prevent the damages\\ \hline
+%\end{tabularx}
+%\end{table}
+%\normalsize
+%
+%
+%There are 16 cases in this model which can be found in table 2.
+%\footnotesize
+%\begin{table}[htbp]
+%\caption{The case list of the Dutch tort law model}
+%\centering
+%\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
+%\hline
+%1	& $\neg$dmg \\
+%2	& $\neg$dut, dmg, $\neg$unl, $\neg$vrt, $\neg$vst, $\neg$vun \\
+%3	& $\neg$dut, dmg, unl, $\neg$imp, $\neg$ift, $\neg$ila, $\neg$ico \\
+%4	& $\neg$dut, dmg, unl, imp, $\neg$cau\\
+%5	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
+%6	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
+%7	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
+%8	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
+%9	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
+%10	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
+%11	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
+%12	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
+%13	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
+%14	&  $\neg$dut, dmg, $\neg$unl, vrt, $\neg$vst, jus\\
+%15	&  $\neg$dut, dmg, $\neg$unl, $\neg$vrt, vst, jus\\
+%16	&  $\neg$dut, dmg, unl, imp, cau, vst, $\neg$prp\\
+%\hline
+%Order & case 1 $>$ case 2 $>$ case 3 $>$ case 4 $>$ case 5 $\sim$ case 6 $\sim$ case 7 $\sim$ case 8 $\sim$ case 9 $\sim$ case 10 $\sim$ case 11 $\sim$ case 12 $\sim$ case 13 $>$ case 14 $\sim$ case 15 $\sim$ case 16 \\
+%\hline 
+%\end{tabularx}
+%\end{table}
+%\normalsize
+%
+%Figure 1 shows the arguments extracted from this model, according to the formalism's definitions, a series of arguments can be generated:
+%
+%\begin{figure} [htbp]
+%\centering
+%\includegraphics [scale=0.3] {figure1.png}
+%\caption{Arguments and their attacks in the case model of Dutch tort law}
+%\end{figure}
+%
+%\begin{itemize}
+%\item $(C, \geq) \vDash dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$
+%\item $(C, \geq) \vDash vrt \leadsto unl \times jus$
+%\item $(C, \geq) \vDash vst \leadsto unl \times jus$
+%\item $(C, \geq) \vDash vun \leadsto unl$
+%\item $(C, \geq) \vDash ift \leadsto imp$
+%\item $(C, \geq) \vDash ila \leadsto imp$
+%\item $(C, \geq) \vDash ico \leadsto imp$
+%\end{itemize}
+%
+%The Dutch tort law model in the Prolog program is represented as {\mf model\_num(1)}. The following codes show the representation of the tort law model in the program.
+%\begin{lstlisting}
+%case(model_num(1),case_num(101),[not(dmg)]).
+%case(model_num(1),case_num(102)[,[not(dut),dmg,not(unl),not(vrt),not(vst),not(vun)]).
+%case(model_num(1),case_num(103),[not(dut),dmg,unl,not(imp),not(ift),not(ila),not(ico)].
+%case(model_num(1),case_num(104),[not(dut),dmg,unl,imp,not(cau)]).
+%case(model_num(1),case_num(105),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp]).
+%case(model_num(1),case_num(106),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),ila,not(ico),not(jus),prp]).
+%case(model_num(1),case_num(107),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),not(ila),ico,not(jus),prp]).
+%case(model_num(1),case_num(108),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),ift,not(ila),not(ico),not(jus),prp]).
+%case(model_num(1),case_num(109),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),ila,not(ico),not(jus),prp]).
+%case(model_num(1),case_num(110),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),not(ila),ico,not(jus),prp]).
+%case(model_num(1),case_num(111),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,ift,not(ila),not(ico),not(jus),prp]).
+%case(model_num(1),case_num(112),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),ila,not(ico),not(jus),prp]).
+%case(model_num(1),case_num(113),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),not(ila),ico,not(jus),prp]).
+%case(model_num(1),case_num(114),[not(dut),dmg,not(unl),vrt,not(vst),jus]).
+%case(model_num(1),case_num(115),[not(dut),dmg,not(unl),not(vrt),vst,jus]).
+%case(model_num(1),case_num(116),[not(dut),dmg,unl,imp,cau,vst,not(prp)]).
+%
+%case_order(model_num(1),[case_num(101),case_num(102),case_num(103),case_num(104),[case_num(105),case_num(106),case_num(107),case_num(108),case_num(109),case_num(110),case_num(111),case_num(112),case_num(113)],[case_num(114),case_num(115),case_num(116)]]).
+%\end{lstlisting}
+%
+%Through the verification given by predicate {\mf case\_model\_valid}, this model is a valid model.
+%\begin{lstlisting}
+%?- case_model_valid(model_num(1)).
+%true.
+%\end{lstlisting}
+%
+%In this program, we use predicate {\mf successful\_attack} to check the validity of the successful attack $dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$ in the model. As the program shows, this attack is a rebutting attack, which means it is not undercutting. This judgement is corresponded to the analysis about the Dutch tort law model above.
+%\begin{lstlisting}
+%?- successful_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+%true.
+%
+%?- rebutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+%true.
+%
+%?- undercutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
+%false.
+%\end{lstlisting}
+%
+%In the same way, other arguments and attacks shown above can be successfully verified in the Prolog program.
+%\begin{lstlisting}
+%?- successful_attack(argument([vrt],[unl]),[jus]).
+%true.
+%
+%?- successful_attack(argument([vst],[unl]),[jus]).
+%true.
+%
+%?- presumptively_valid(argument([vun],[unl])).
+%true.
+%
+%?- presumptively_valid(argument([ift],[imp])).
+%true.
+%
+%?- presumptively_valid(argument([ila],[imp])).
+%true.
+%
+%?- presumptively_valid(argument([ico],[imp])).
+%true.
+%\end{lstlisting}
+%
+%
 \section{Case study: Copyright infringement in Chinese Criminal Law}
 
 %FIRST: Explain the law informally
