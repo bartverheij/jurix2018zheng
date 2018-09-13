@@ -199,163 +199,6 @@ The Prolog program can be used to validate hand-made domain models, such as the 
 \end{figure*}
 
 
-
-%\section{Case study: Dutch tort law}
-%
-%%FIRST: Explain the law informally (brief)
-%
-%%SECOND: Show arguments + attacks and the associated case model
-%
-%%THIRD: Show the Prolog implementation, in particular: show the validity of the arguments + attacks
-%
-%\noindent The case model of Dutch tort law was built by Verheij in 2017\citep{Verheij2017Formalizing}. This model applied two articles 6:162 and 6:163 of the Dutch civil code (in the Netherlands referred to as Art. 6:162 and 6:163 BW, BW for 'Burgerlijk Werboek') govern the handling of wrongful acts. Here follows the translation by \citep{Betlem1993Civil}:
-%
-%\begin{itemize}
-%\item \textbf{Art. 6:612 BW.} 1. A person who commits an unlawful act toward another which can be imputed to him, must repair the damage which the other person suffers as a consequence thereof.
-%
-%2. Except where there is a ground of justification, the following acts are deemed to be unlawful: the violation of a right, an act or omission violating a statutory duty or a rule of unwritten law pertaining to proper social conduct.
-%
-%3. An unlawful act can be imputed to its author if it results from his fault or from a cause for which he is answerable according to law or common opinion.
-%
-%\item \textbf{Art. 6:613 BW.} There is no obligation to repair damage when the violated norm does not have as its purpose the protection from damage such as that suffered by the victim.
-%\end{itemize}
-%
-%Verheij built a case model for these two articles in his paper presented in ICAIL 2017\citep{Verheij2017Formalizing}, he gave each elementary proposition in the case model an abbreviation. These propositions will be listed in Table 1.
-%
-%\footnotesize
-%\begin{table}[htb]
-%\caption{Elementary propositions for the tort law domain}
-%\centering
-%\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-%\hline
-%dut	&	There is a duty to repair someone's damages\\
-%dmg	&	Someone has suffered damages by someone else's act.\\
-%unl	&	The act committed was unlawful\\
-%imp	&	The act can be imputed to the person that committed the act\\
-%cau	&	The act caused the suffered damages\\
-%vrt	&	The act is a violation of someone’s right.\\
-%vst	&	The act is a violation of a statutory duty\\
-%vun	&	The act is a violation of unwritten law against proper social conduct\\
-%jus	&	There exist grounds of justification\\
-%ift	&	The act is imputable to someone because of the person's fault\\
-%ila	&	The act is imputable to someone because of law\\
-%ico	&	The act is imputable to someone because of common opinion\\
-%prp	&	The violated statutory duty does not have the purpose to prevent the damages\\ \hline
-%\end{tabularx}
-%\end{table}
-%\normalsize
-%
-%
-%There are 16 cases in this model which can be found in table 2.
-%\footnotesize
-%\begin{table}[htbp]
-%\caption{The case list of the Dutch tort law model}
-%\centering
-%\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-%\hline
-%1	& $\neg$dmg \\
-%2	& $\neg$dut, dmg, $\neg$unl, $\neg$vrt, $\neg$vst, $\neg$vun \\
-%3	& $\neg$dut, dmg, unl, $\neg$imp, $\neg$ift, $\neg$ila, $\neg$ico \\
-%4	& $\neg$dut, dmg, unl, imp, $\neg$cau\\
-%5	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-%6	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-%7	&  dut, dmg, unl, imp, cau, vrt, $\neg$vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-%8	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-%9	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-%10	&  dut, dmg, unl, imp, cau, $\neg$vrt, vst, $\neg$vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-%11	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, ift, $\neg$ila, $\neg$ico, $\neg$jus, prp\\
-%12	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, ila, $\neg$ico, $\neg$jus, prp\\
-%13	&  dut, dmg, unl, imp, cau, $\neg$vrt, $\neg$vst, vun, $\neg$ift, $\neg$ila, ico, $\neg$jus, prp\\
-%14	&  $\neg$dut, dmg, $\neg$unl, vrt, $\neg$vst, jus\\
-%15	&  $\neg$dut, dmg, $\neg$unl, $\neg$vrt, vst, jus\\
-%16	&  $\neg$dut, dmg, unl, imp, cau, vst, $\neg$prp\\
-%\hline
-%Order & case 1 $>$ case 2 $>$ case 3 $>$ case 4 $>$ case 5 $\sim$ case 6 $\sim$ case 7 $\sim$ case 8 $\sim$ case 9 $\sim$ case 10 $\sim$ case 11 $\sim$ case 12 $\sim$ case 13 $>$ case 14 $\sim$ case 15 $\sim$ case 16 \\
-%\hline 
-%\end{tabularx}
-%\end{table}
-%\normalsize
-%
-%Figure 1 shows the arguments extracted from this model, according to the formalism's definitions, a series of arguments can be generated:
-%
-%\begin{figure} [htbp]
-%\centering
-%\includegraphics [scale=0.3] {figure1.png}
-%\caption{Arguments and their attacks in the case model of Dutch tort law}
-%\end{figure}
-%
-%\begin{itemize}
-%\item $(C, \geq) \vDash dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$
-%\item $(C, \geq) \vDash vrt \leadsto unl \times jus$
-%\item $(C, \geq) \vDash vst \leadsto unl \times jus$
-%\item $(C, \geq) \vDash vun \leadsto unl$
-%\item $(C, \geq) \vDash ift \leadsto imp$
-%\item $(C, \geq) \vDash ila \leadsto imp$
-%\item $(C, \geq) \vDash ico \leadsto imp$
-%\end{itemize}
-%
-%The Dutch tort law model in the Prolog program is represented as {\mf model\_num(1)}. The following codes show the representation of the tort law model in the program.
-%\begin{lstlisting}
-%case(model_num(1),case_num(101),[not(dmg)]).
-%case(model_num(1),case_num(102)[,[not(dut),dmg,not(unl),not(vrt),not(vst),not(vun)]).
-%case(model_num(1),case_num(103),[not(dut),dmg,unl,not(imp),not(ift),not(ila),not(ico)].
-%case(model_num(1),case_num(104),[not(dut),dmg,unl,imp,not(cau)]).
-%case(model_num(1),case_num(105),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),ift,not(ila),not(ico),not(jus),prp]).
-%case(model_num(1),case_num(106),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),ila,not(ico),not(jus),prp]).
-%case(model_num(1),case_num(107),[dut,dmg,unl,imp,cau,vrt,not(vst),not(vun),not(ift),not(ila),ico,not(jus),prp]).
-%case(model_num(1),case_num(108),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),ift,not(ila),not(ico),not(jus),prp]).
-%case(model_num(1),case_num(109),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),ila,not(ico),not(jus),prp]).
-%case(model_num(1),case_num(110),[dut,dmg,unl,imp,cau,not(vrt),vst,not(vun),not(ift),not(ila),ico,not(jus),prp]).
-%case(model_num(1),case_num(111),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,ift,not(ila),not(ico),not(jus),prp]).
-%case(model_num(1),case_num(112),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),ila,not(ico),not(jus),prp]).
-%case(model_num(1),case_num(113),[dut,dmg,unl,imp,cau,not(vrt),not(vst),vun,not(ift),not(ila),ico,not(jus),prp]).
-%case(model_num(1),case_num(114),[not(dut),dmg,not(unl),vrt,not(vst),jus]).
-%case(model_num(1),case_num(115),[not(dut),dmg,not(unl),not(vrt),vst,jus]).
-%case(model_num(1),case_num(116),[not(dut),dmg,unl,imp,cau,vst,not(prp)]).
-%
-%case_order(model_num(1),[case_num(101),case_num(102),case_num(103),case_num(104),[case_num(105),case_num(106),case_num(107),case_num(108),case_num(109),case_num(110),case_num(111),case_num(112),case_num(113)],[case_num(114),case_num(115),case_num(116)]]).
-%\end{lstlisting}
-%
-%Through the verification given by predicate {\mf case\_model\_valid}, this model is a valid model.
-%\begin{lstlisting}
-%?- case_model_valid(model_num(1)).
-%true.
-%\end{lstlisting}
-%
-%In this program, we use predicate {\mf successful\_attack} to check the validity of the successful attack $dmg \wedge unl \wedge imp \wedge cau \leadsto dut \times vst \wedge \neg prp$ in the model. As the program shows, this attack is a rebutting attack, which means it is not undercutting. This judgement is corresponded to the analysis about the Dutch tort law model above.
-%\begin{lstlisting}
-%?- successful_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-%true.
-%
-%?- rebutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-%true.
-%
-%?- undercutting_attack(argument([dmg,unl,imp,cau],[dut]),[vst,not(prp)]).
-%false.
-%\end{lstlisting}
-%
-%In the same way, other arguments and attacks shown above can be successfully verified in the Prolog program.
-%\begin{lstlisting}
-%?- successful_attack(argument([vrt],[unl]),[jus]).
-%true.
-%
-%?- successful_attack(argument([vst],[unl]),[jus]).
-%true.
-%
-%?- presumptively_valid(argument([vun],[unl])).
-%true.
-%
-%?- presumptively_valid(argument([ift],[imp])).
-%true.
-%
-%?- presumptively_valid(argument([ila],[imp])).
-%true.
-%
-%?- presumptively_valid(argument([ico],[imp])).
-%true.
-%\end{lstlisting}
-%
-%
 \section{Case study: Copyright infringement in Chinese Criminal Law}
 
 %FIRST: Explain the law informally
@@ -444,14 +287,14 @@ If we add these defeating circumstance to the rules we listed above, then some o
 
 In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 shows the scenario that although the defendant has published and copied the items shown in Art. 217:1 without the permission of the copyright owner, he still will not be considered as copyright infringement because his action is not belong to "without permission of the copyright owner". Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits, so he will not be judge through Art. 217.
 
-From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 4 lists cases in the model, Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different. In this model, Case 1 is the most preferred case, as we consider the "presumption of innocence" is the most important principle in the process of decision making. Besides, in some situations, the defendant will not be regarded as violating someone else's copyright, for instance, the defendant's action is not belong to "without permission of the copyright owner" or his purpose is not for making profits. In this model, these situations are also very important. So we put them in second place. The rest of cases in the preferred relation are the specific punishments of copyright infringement, we put them in third place.
+From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 2 lists part of cases in the model, Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different. In this model, Case 1 is the most preferred case, as we consider the "presumption of innocence" is the most important principle in the process of decision making. Besides, in some situations, the defendant will not be regarded as violating someone else's copyright, for instance, the defendant's action is not belong to "without permission of the copyright owner" or his purpose is not for making profits. In this model, these situations are also very important. So we put them in second place. The rest of cases in the preferred relation are the specific punishments of copyright infringement, we put them in third place.
 
 \footnotesize
 %\begin{table}[htb]
 %\caption{The case list of the case model}
 %\centering
 %\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-\begin{longtable}{p{5mm}p{115mm}}
+\begin{longtable}{p{1mm}p{120mm}}
 \caption{The case list of the case model\label{tab:long}}\\
 \hline
 1	& $\neg$pac, $\neg$ite, $\neg$pco, $\neg$epr, $\neg$avp, $\neg$psa, $\neg$ifg \\
@@ -467,42 +310,9 @@ From Case 4 to Case 13, different punishments for the defendant's action in Art.
 11	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, cpb, pbt \\
 12	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, $\neg$cpb, $\neg$pbt \\
 13	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\
-14	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, $\neg$fpp \\
-15	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-16	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-17	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, $\neg$lps, m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-18	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-19	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-20	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-21	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, cpb, pbt \\
-22	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, cpb, pbt \\
-23	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, $\neg$cpb, $\neg$pbt \\
-24	& epr, $\neg$pco, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\
-25	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, $\neg$fpp \\
-26	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-27	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-28	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, $\neg$lps, m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-29	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-
-30	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-31	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-32	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, cpb, pbt \\
-33	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, cpb, pbt \\
-34	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, $\neg$cpb, $\neg$pbt \\
-35	& pac, avp, $\neg$pco, $\neg$epr, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\
-36	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, $\neg$fpp \\
-37	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, ihe, $\neg$ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-38	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-39	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, $\neg$lps, m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-40	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-41	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-42	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-43	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, cpb, pbt \\
-44	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, cpb, pbt \\ 
-45	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, $\neg$cpb, $\neg$pbt \\
-46	& psa, $\neg$pco, $\neg$epr, $\neg$avp, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\ 
+14	& ... ...\\
 \hline
-Order & case 1 $>$ case 2 = case 3 = case 14 = case 25 = case 36 $>$ case 4 = case 5 = case 7 = case 8 = case 15 = case 16 = case 18 = case 19 = case 26 = case 27 = case 29 = case 30 = case 37 = case 38 = case 40 = case 41 = case 6 = case 9 = case 10 = case 11 = case 12 = case 13 = case 17 = case 20 = case 21 = case 22 = case 23 = case 24 = case 28 = case 31 = case 32 = case 33 = case 34 = case 35 = case 39 = case 42 = case 43 = case 44 = case 45 = case 46\\
+ & case 1 $>$ case 2 $\sim$ case 3 $\sim$ ... $>$ case 4 $\sim$ case 5 $\sim$ case 6 $\sim$ case 7 $\sim$ ... $\sim$ case 8 $\sim$ case 9 $\sim$ case 10 $\sim$ case 11 $\sim$ case 12 $\sim$ case 13 $\sim$ ...\\
 \hline
 %\end{tabularx}
 %\end{table}
@@ -549,41 +359,9 @@ case(model_num(2),case_num(210),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,
 case(model_num(2),case_num(211),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
 case(model_num(2),case_num(212),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
 case(model_num(2),case_num(213),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(214),[epr,not(pco),not(avp),not(psa),ifg,not(fpp)]).
-case(model_num(2),case_num(215),[epr,not(pco),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(216),[epr,not(pco),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(217),[epr,not(pco),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),not(lps),m3fti,not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(218),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(219),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(220),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(221),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,cpb,pbt]).
-case(model_num(2),case_num(222),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
-case(model_num(2),case_num(223),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(224),[epr,not(pco),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(225),[pac,avp,not(pco),not(epr),not(psa),ifg,not(fpp)]).
-case(model_num(2),case_num(226),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,ihe,not(ils),crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(227),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(228),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),not(lps),m3fti,not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(229),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(230),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(231),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(232),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,cpb,pbt]).
-case(model_num(2),case_num(233),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
-case(model_num(2),case_num(234),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(235),[pac,avp,not(pco),not(epr),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(236),[psa,not(pco),not(epr),not(avp),ifg,not(fpp)]).
-case(model_num(2),case_num(237),[psa,not(pco),not(epr),not(avp),ifg,fpp,ihe,not(ils),crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(238),[psa,not(pco),not(epr),not(avp),ifg,fpp,ihe,not(ils),crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(239),[psa,not(pco),not(epr),not(avp),ifg,fpp,ihe,not(ils),crc,not(hps),not(lps),m3fti,not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(240),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(241),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(242),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(243),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,cpb,pbt]).
-case(model_num(2),case_num(244),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
-case(model_num(2),case_num(245),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(246),[psa,not(pco),not(epr),not(avp),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
+...
 
-case_order(model_num(2),[case_num(201),[case_num(202),case_num(203),case_num(214),case_num(225),case_num(236)],[case_num(204),case_num(205),case_num(207),case_num(208),case_num(215),case_num(216),case_num(218),case_num(219),case_num(226),case_num(227),case_num(229),case_num(230),case_num(237),case_num(238),case_num(240),case_num(241),case_num(206),case_num(209),case_num(210),case_num(211),case_num(212),case_num(213),case_num(217),case_num(220),case_num(221),case_num(222),case_num(223),case_num(224),case_num(228),case_num(231),case_num(232),case_num(233),case_num(234),case_num(235),case_num(239),case_num(242),case_num(243),case_num(244),case_num(245),case_num(246)]]).
+case_order(model_num(2),[case_num(201),[case_num(202),case_num(203), ...],[case_num(204),case_num(205),case_num(207),case_num(208), ... ,case_num(206),case_num(209),case_num(210),case_num(211),case_num(212),case_num(213), ...]]).
 \end{lstlisting}
 
 The following query shows that it is a valid model. Also, the arguments and attacks shown above can be verified by this program.
