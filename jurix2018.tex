@@ -85,19 +85,11 @@ Artificial Intelligence and Law\sep Rule-based Reasoning\sep Case-based Reasonin
 
 \section{Introduction}
 \noindent 
-%Legal justice requires judges to give reasonable decisions. AI technologies can support the reduction of the number of  cases in which people were unjustly charged by verifying the rationality and validity of judges' decisions automatically. 
-In the field of AI and law---going at least back to the 1970s \cite{Buchanan1970Some}---, scholars usually follow three approaches to develop legal reasoning systems, which are rule-based reasoning, case-based reasoning and argument-based reasoning. 
-%The study of legal reasoning systems . Scholars developed various systems by following rule-based reasoning, case-based reasoning and argument-based reasoning. 
-In the 1980s, the British Nationality Act (BNA) was implemented in Prolog~\citep{Sergot1986The}, in a successful attempt to develop rule-based reasoning systems in the field of law. Case-based reasoning was modeled in the systems HYPO, BankXX, CATO and IBP~\citep{risslandAshley1987,Ashley1991Reasoning,Rissland1996BankXX,Aleven1997Evaluating,Bruninghaus2003Predicting}. 
+In the field of AI and law---going at least back to the 1970s \cite{Buchanan1970Some}---, scholars usually follow three approaches to develop legal reasoning systems, which are rule-based reasoning, case-based reasoning and argument-based reasoning. In the 1980s, the British Nationality Act (BNA) was implemented in Prolog~\citep{Sergot1986The}, in a successful attempt to develop rule-based reasoning systems in the field of law. Case-based reasoning was modeled in the systems HYPO, BankXX, CATO and IBP~\citep{risslandAshley1987,Ashley1991Reasoning,Rissland1996BankXX,Aleven1997Evaluating,Bruninghaus2003Predicting}. 
 CABARET \citep{Rissland1991CABARET} and GREBE \citep{Branting1991Building} are hybrid systems not only use case-based reasoning, but also other kinds of reasoning. 
-%\citep{Bench-Capon2017HYPO}.
 Argumentation models of legal rule-based and case-based reasoning~\citep{prakkenSartor1996,prakkenSartor1998} are connected to later systems based on abstract argumentation~\citep{Dung1995On}, inspiring for instance ASPIC+ \citep{Prakken2010An}, ABA \citep{Bondarenko1997An} and DeLP \citep{Garcia2003Defeasible}.
 
 The recent case model formalism \citep{Verheij2016Correct} is a hybrid theory showing connections between cases, rules and arguments~\citep{Verheij2017Formalizing}. The formalism defines different ways in which rule-based arguments can be valid in cases: arguments can be coherent, conclusive or presumptive. The formalism has been applied to model Dutch tort law, showing how a rule-based legal domain can be grounded in legal cases. In this way, a formal connection is established between the civil law tradition focusing on rules and the common law tradition focusing on cases. The formalism has also been applied to the modeling of a series of New York tort cases (as studied by~\cite{bermanHafner1995,hafnerBerman2002}), analyzing value-guided teleological reasoning~\citep{Verheij2016Formalizing}.
-
-%This formalism also incorporates ideas from value judgements, it could be used for comparing the arguments implicated in a case model and deciding which argument is more presumptive. However, the models in legal domain based on Verheij's theory often have complex argument structure. For users, it is easy to make mistakes through the original hand-made way during the process of modeling. Thus using a program to verify the model and the arguments implicated by it is necessary. 
-%The theory background of this paper comes from Bart Verheij's research on case model formalism \citep{Verheij2016Correct}. In this formalism, three kinds of argument validity in the case model can be analyzed through a given preferred relation of the cases. 
-%Verheij's theory has incorporated the notion of values in argumentation and also combines rules, cases and arguments together which can be applied in the field of law \citep{Verheij2017Formalizing} and used for ethical systems design \citep{Verheij2016Formalizing}.
 
 The present paper provides a computational version of the case model formalism. A Prolog program is presented that can computationally check whether a case model is correct, whether rule-based arguments are valid (in the three kinds of validity coherence, conclusiveness and presumptiveness), and whether defeating circumstances are rebutting, undercutting or undermining. The computational tool can be used to support the manual modeling of a complex legal domain, making that more manageable. As an example, we provide a new domain model, namely Chinese copyright infringement law, both formally (as a case model) and computationally (in Prolog).
 
@@ -140,8 +132,6 @@ $(C,  \geq) \vDash \varphi \leadsto \psi$ if and only if $\exists \omega \in C$:
 
 We then say that the argument from $\varphi$ to $\psi$ is \textit{(presumptively) valid} with respect to the case model.
 
-Verheij has also defined some kinds of argument attacking in his formalism\citep{Verheij2017Formalizing}.
-
 \textbf{Definition 2.6} (\textit{Successful attack}) Let $(C,  \geq)$ be a case model, and $(\varphi, \psi)$ a presumptively valid argument. Then circumstances $\chi$ are \textit{defeating} or \textit{successful attacking} the argument when $(\varphi \wedge \chi, \psi)$ is not presumptively valid. We write $(C,  \geq) \vDash \varphi \leadsto \psi \times \chi$. Defeating circumstances are \textit{excluding} when $(\varphi \wedge \chi, \psi)$ is not coherent. A case $\omega \in C$ provides grounding for the attack if $\omega \vDash \varphi \wedge \chi$.
 
 \textbf{Definition 2.7} (\textit{Rebutting attack}) When circumstance $\chi$ successfully attack presumptively valid argument $(\varphi, \psi)$, the circumstances are rebutting when $(\varphi \wedge \chi, \neg \psi)$ is presumptively valid.
@@ -151,13 +141,6 @@ Verheij has also defined some kinds of argument attacking in his formalism\citep
 \textbf{Definition 2.9} (\textit{Undermining attack}) When circumstances $\chi$ successfully attack a presumption $(\top, \varphi)$, the circumstances are \textit{undermining}.
 
 \section{Implementation in Prolog}
-
-%FIRST: Show and explain how a case model is translated to Prolog
-
-%THEN: Show and explain how main predicates are defined (coherence, presumptiveness, conclusiveness)
-
-%QUESTION: Did you define `defeating/successfully attacking circumstances' in Prolog? Section 5 of ICAIL 2017 paper. And: rebutting/undercutting/undermining? 
-
 \noindent We have implemented the case model formalism in Prolog. We use the previously developed model of Dutch tort law~\cite{Verheij2017Formalizing} as an illustration. Cases are represented as Prolog lists, of which the elements consist of strings and their negations (represented using {\mf not/1}). For instance, {\mf [not(dut),dmg,unl,imp,not(cau)]} represents the case in which there is no duty ({\mf not(dut)}) to repair the damages ({\mf dmg}) although the act is unlawful ({\mf unl}) and imputable ({\mf imp]}), but there is no causality ({\mf not(cau)}). Case models are represented as lists of cases and their ordering, where case models and cases are referred to using identifiers. 
 	\begin{lstlisting}[caption={Definition of the Dutch tort law case model in Prolog},captionpos=b,float]
 	case(model_num(1),case_num(101),[not(dmg)]).
@@ -193,7 +176,7 @@ The Prolog program can be used to validate hand-made domain models, such as the 
 
 \begin{figure*}[btp]
 	%\centering
-	\scalebox{0.8}{\input{img/tort.tex}}
+	\scalebox{0.7}{\input{img/tort.tex}}
 \caption{The Dutch tort law model: argument structure (left); in Prolog (right)}
 \label{fig:tort}
 \end{figure*}
@@ -210,6 +193,7 @@ The Prolog program can be used to validate hand-made domain models, such as the 
 \noindent The article of Copyright Infringement in Chinese Criminal Law\cite{StateCouncil2015series} is below:
 \newline
 
+\footnotesize
 \begin{adjustwidth}{0.5cm}{0cm}
 \noindent \textbf{Article 217} Whoever, for the purpose of making profits, commits any of the following acts of infringement on copyright shall, if the amount of illegal gains is relatively large, or if there are other serious circumstances, be sentenced to fixed-term imprisonment of not more than three years or criminal detention and shall also, or shall only, be fined; if the amount of illegal gains is huge or if there are other especially serious circumstances, he shall be sentenced to fixed-term imprisonment of not less than three years but not more than seven years and shall also be fined:
 
@@ -222,14 +206,16 @@ The Prolog program can be used to validate hand-made domain models, such as the 
 \noindent (4) producing or selling an artwork where the signature of the author is forged.\newline
 \end{adjustwidth}
 
-
-In order to recognize the propositions in the case model easily, each elementary proposition in this model has been given an abbreviation. These abbreviations are shown in table 3.
+\normalsize
+In order to distinguish the propositions in the case model easily, each elementary proposition in this model has been given an abbreviation. These abbreviations are shown in table 1.
 
 \footnotesize
-\begin{table}[htbp]
-\caption{Elementary propositions in the case model of copyright infringement}
-\centering
-\begin{tabularx}{110mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
+\begin{longtable}{p{3mm}p{100mm}}
+\caption{Elementary propositions in the case model of copyright infringement\label{tab:long}}\\
+%\begin{table}[htbp]
+%\caption{Elementary propositions in the case model of copyright infringement}
+%\centering
+%\begin{tabularx}{110mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
 \hline
 ifg & copyright infringement\\
 fpp & for the purpose of making profits\\
@@ -252,101 +238,49 @@ lps & there is a reason which will give the defendant a lighter punishment\\
 cpb & the defendant satisfies the conditions of probation\\
 pbt & the defendant will be put on probation\\
 \hline
-\end{tabularx}
-\end{table}
+\end{longtable}
+%\end{tabularx}
+%\end{table}
 
 \normalsize
-In Art. 217, there are 4 kinds of situation in copyright infringement, if someone violates other people's copyright for the purpose of making profits, then he will be sentenced to the crime of copyright infringement. The judge will sentenced him to 4 different kinds of punishment according to the degree of severity of his crime. Above all, several rules about copyright infringement can be extracted.
+In Art. 217, there are 4 kinds of act in copyright infringement, if someone violates other people's copyright for the purpose of making profits, then he will be sentenced to the crime of copyright infringement. The judge will sentenced him to 4 different kinds of punishment according to the degree of severity of his crime. %Above all, several rules about copyright infringement can be extracted.
 
-If the defendant has following actions:
-\begin{enumerate}
-\item \textit{publish or copied something which can be considered as one of the items shown in Art. 217:1 without permission of the copyright owner};
-\item \textit{publish a book of which another person has the exclusive publishing right};
-\item  \textit{publish or copied the audio or video resording which the producer is someone else};
-\item \textit{produce or sell an artwork where the signature of the author if forged},
-\end{enumerate}
-Then the defendant will be regarded as violating someone else's copyright.
+%\begin{enumerate}
+%\item If the defendant has following actions:
+%\begin{itemize}
+%\item \textit{publish or copied something which can be considered as one of the items shown in Art. 217:1 without permission of the copyright owner};
+%\item \textit{publish a book of which another person has the exclusive publishing right};
+%\item  \textit{publish or copied the audio or video resording which the producer is someone else};
+%\item \textit{produce or sell an artwork where the signature of the author if forged},
+%\end{itemize}
+%Then the defendant will be regarded as violating someone else's copyright.
 
-If the defendant was regarded as violating someone else's copyright for the purpose of making profits, then the defendant will be sentenced to the crime of copyright infringement. This rule can be represented as $ifg \wedge fpp \Rightarrow crc$.
+%\item If the defendant was regarded as violating someone else's copyright for the purpose of making profits, then the defendant will be sentenced to the crime of copyright infringement. %($ifg \wedge fpp \Rightarrow crc$).
 
-If \textit{the amount of defendant's illegal gains was large or existed other serious circumstances}, the defendant shall be sentenced to 3 kinds of punishments, \textit{fixed-term imprisonment of not more than 3 years and fined} ($crc \wedge ils \leadsto l3fti \wedge fin$); \textit{criminal detention and fined} ($crc \wedge ils \leadsto cdt \wedge fin$) and only \textit{fined} ($crc \wedge ils \leadsto fin$).
+%\item If \textit{the amount of defendant's illegal gains was large or existed other serious circumstances}, the defendant shall be sentenced to 3 kinds of punishments, \textit{fixed-term imprisonment of not more than 3 years and fined}; \textit{criminal detention and fined} and only \textit{fined}. %($crc \wedge ils \leadsto l3fti \wedge fin$)($crc \wedge ils \leadsto cdt \wedge fin$)($crc \wedge ils \leadsto fin$).
 
-If \textit{the amount of defendant's illegal gains was huge or existed other especially serious circumstances}, then the defendant shall be sentenced to \textit{fixed-term imprisonment of not less that three years but not more than seven years and fined}, this can be represented as $crc \wedge ihe \Rightarrow m3fti \wedge fin$.
+%\item If \textit{the amount of defendant's illegal gains was huge or existed other especially serious circumstances}, then the defendant shall be sentenced to \textit{fixed-term imprisonment of not less that three years but not more than seven years and fined}. %(this can be represented as $crc \wedge ihe \Rightarrow m3fti \wedge fin$.)
 
-There are two kinds of punishments which are possible to be put on probation, if the defendant satisfied the conditions of probation: 
-1. fixed-term imprisonment of not more than 3 years and fined ($crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$); 2. criminal detention and fined ($crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$).
+%\item There are two kinds of punishments which are possible to be put on probation, if the defendant satisfied the conditions of probation: 
+%\begin{itemize}
+%\item fixed-term imprisonment of not more than 3 years and fined; %($crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$); 
+%\item criminal detention and fined. %($crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$).
+%\end{itemize}
+%\end{enumerate}
 
 According to Art. 217's relevant judicial explanations, there are 3 defeating circumstance: 1. The action is not belong to "without permission of the copyright owner"; 2. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a heavier punishment; 3. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a lighter punishment.
 
-If we add these defeating circumstance to the rules we listed above, then some of the rules will be changed. For example,
-\begin{itemize}
-\item $pac \wedge ite \wedge pco \leadsto ifg \times pec$
-\item $crc \wedge ils \leadsto l3fti \wedge fin \times hps$
-\item $crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
-\end{itemize}
+%If we add these defeating circumstance to the rules we listed above, then some of the rules will be changed. For example,
+%\begin{itemize}
+%\item $pac \wedge ite \wedge pco \leadsto ifg \times pec$
+%\item $crc \wedge ils \leadsto l3fti \wedge fin \times hps$
+%\item $crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
+%\end{itemize}
 
-In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 shows the scenario that although the defendant has published and copied the items shown in Art. 217:1 without the permission of the copyright owner, he still will not be considered as copyright infringement because his action is not belong to "without permission of the copyright owner". Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits, so he will not be judge through Art. 217.
+In the light of Art. 217 and the judicial explanations related to it, a case model can be built. The model has 46 cases. Case 1 is built by the principle of "presumption of innocence". Case 2 is for the first defeating circumstance mentioned above. Case 3 shows the scenario that the defendant violated someone else's copyright, but he didn't do it for making profits. From Case 3 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Thus Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different. In this model, Case 1 is the most preferred case, as we consider the "presumption of innocence" is the most important principle in the process of decision making. Besides, in some situations, the defendant will not be regarded as violating someone else's copyright, for instance, Case 2 and Case 3. We put them in second place. The rest of cases in the preferred relation are the specific punishments of copyright infringement, they are less preferred than the cases in first and second place.
 
-From Case 4 to Case 13, different punishments for the defendant's action in Art. 217:1 are listed. In the same way, different punishments for the defendant in Art. 217:2, Art. 217:3 and Art. 217:4 will also be listed into the case model. Table 2 lists part of cases in the model, Case 14 to Case 46 have similar components with Case 4 to Case 13, except the acts of infringement on copyright are different. In this model, Case 1 is the most preferred case, as we consider the "presumption of innocence" is the most important principle in the process of decision making. Besides, in some situations, the defendant will not be regarded as violating someone else's copyright, for instance, the defendant's action is not belong to "without permission of the copyright owner" or his purpose is not for making profits. In this model, these situations are also very important. So we put them in second place. The rest of cases in the preferred relation are the specific punishments of copyright infringement, we put them in third place.
-
-\footnotesize
-%\begin{table}[htb]
-%\caption{The case list of the case model}
-%\centering
-%\begin{tabularx}{120mm}{>{\hsize=0.1\hsize}X>{\hsize=1.6\hsize}X}
-\begin{longtable}{p{1mm}p{120mm}}
-\caption{The case list of the case model\label{tab:long}}\\
-\hline
-1	& $\neg$pac, $\neg$ite, $\neg$pco, $\neg$epr, $\neg$avp, $\neg$psa, $\neg$ifg \\
-2	& pac, ite, pco, pec, $\neg$ifg \\
-3	& pac, ite, pco, $\neg$pec, $\neg$epr, $\neg$avp, $\neg$psa, ifg, $\neg$fpp \\
-4	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-5	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-6	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, ihe, $\neg$ils, crc, $\neg$hps, $\neg$lps, m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-7	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-8	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, $\neg$fin \\
-9	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, $\neg$cdt, fin \\
-10	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, cpb, pbt \\
-11	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, cpb, pbt \\
-12	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, l3fti, $\neg$cdt, fin, $\neg$cpb, $\neg$pbt \\
-13	& pac, ite, pco, $\neg$epr, $\neg$avp, $\neg$psa, ifg, fpp, $\neg$ihe, ils, crc, $\neg$hps, $\neg$lps, $\neg$m3fti, $\neg$l3fti, cdt, fin, $\neg$cpb, $\neg$pbt \\
-14	& ... ...\\
-\hline
- & case 1 $>$ case 2 $\sim$ case 3 $\sim$ ... $>$ case 4 $\sim$ case 5 $\sim$ case 6 $\sim$ case 7 $\sim$ ... $\sim$ case 8 $\sim$ case 9 $\sim$ case 10 $\sim$ case 11 $\sim$ case 12 $\sim$ case 13 $\sim$ ...\\
-\hline
-%\end{tabularx}
-%\end{table}
-\end{longtable}
-\normalsize
-
-\normalsize
-From this copyright infringement model, we can get the argument diagram illustrated in Figure 2. This argument has multi-steps, and it is corresponding to the model we built.
-
-\begin{figure*}[btp]
-	\scalebox{0.8}{\input{img/copyright.tex}}
-\caption{The Chinese copyright infringement model: argument structure (left); in Prolog (right)}
-\label{fig:tort}
-\end{figure*}
-
-According to the definitions of Verheij's case model formalism, the rule $ifg \wedge fpp \Rightarrow crc$ is valid in this model. As the model shows, Case and case 15 implicate sentence $epr \wedge ifg$ which is the case made by the argument $(epr, ifg)$, so this argument is coherent. Besides, all the cases which imply the premise $epr$, also imply the conclusion $ifg$. So argument $(epr, ifg)$ is conclusive in the case model. And these arguments are also conclusive in the model:
-%According to the definitions of Verheij's case model formalism, the rule $epr \Rightarrow ifg$ is valid in this model. As the model shows, case 14 and case 15 implicate sentence $epr \wedge ifg$ which is the case made by the argument $(epr, ifg)$, so this argument is coherent. Besides, all the cases which imply the premise $epr$, also imply the conclusion $ifg$. So argument $(epr, ifg)$ is conclusive in the case model. And these arguments are also conclusive in the model:
-
-\begin{itemize}
-\item $(C,  \geq) \models pac \wedge avp \Rightarrow ifg$
-\item $(C,  \geq) \models ifg \wedge fpp \Rightarrow crc$
-\item $(C,  \geq) \models crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$
-\end{itemize}
-
-According to the definitions of Verheij's case model formalism, the rule $pac \wedge ite \wedge pco \leadsto ifg \times pec$ is also valid in the copyright infringement model. The attack from $pec$ successfully attacked the presumptively valid argument $(pac \wedge ite \wedge pco, ifg)$, and made the argument $(pac \wedge ite \wedge pco \wedge pec, \neg ifg)$ presumptively valid. In the light of the copyright infringement model, Case 2 has implied the case made by the argument $(pac \wedge ite \wedge pco \wedge pec, \neg ifg)$, so this argument is coherent. Furthermore, Case 2 is the strongest case in the cases which implied the premise of this argument. So we say the argument $(pac \wedge ite \wedge pco \wedge pec, \neg ifg)$ is presumptively valid in the case model. The arguments below are also presumptively valid:
-
-\begin{itemize}
-\item $(C,  \subseteq) \models crc \wedge ils \leadsto l3fti \wedge fin \times hps$
-\item $(C,  \subseteq) \models crc \wedge ils \leadsto cdt \wedge fin \times hps$
-\item $(C,  \subseteq) \models crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
-\end{itemize}
-
-The Chinese copyright infringement model is represented as {\mf model\_num(2)} in the program. 
-\begin{lstlisting}
+The Chinese copyright infringement model is represented as {\mf model\_num(2)} in the program. The following codes show the first 13 cases in the model and their preferred relation. From this copyright infringement model, we can get the argument diagram illustrated in Figure 2 (left). This argument has multi-steps, and it is corresponding to the model we built.
+\begin{lstlisting}[caption={Definition of the Chinese copyright infringement case model in Prolog},captionpos=b,float]
 case(model_num(2),case_num(201),[not(pac),not(ite),not(pco),not(epr),not(avp),not(psa),not(ifg)]).
 case(model_num(2),case_num(202),[pac,ite,pco,pec,not(ifg)]).
 case(model_num(2),case_num(203),[pac,ite,pco,not(pec),not(epr),not(avp),not(psa),ifg,not(fpp)]).
@@ -361,58 +295,43 @@ case(model_num(2),case_num(211),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,
 case(model_num(2),case_num(212),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
 case(model_num(2),case_num(213),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
 ...
-
 case_order(model_num(2),[case_num(201),[case_num(202),case_num(203), ...],[case_num(204),case_num(205),case_num(207),case_num(208), ... ,case_num(206),case_num(209),case_num(210),case_num(211),case_num(212),case_num(213), ...]]).
 \end{lstlisting}
 
-The following query shows that it is a valid model. Also, the arguments and attacks shown above can be verified by this program.
+\begin{figure*}[btp]
+	\scalebox{0.7}{\input{img/copyright.tex}}
+\caption{The Chinese copyright infringement model: argument structure (left); in Prolog (right)}
+\label{fig:tort}
+\end{figure*}
 
-%\begin{lstlisting}
-%?- case_model_valid(model_num(2)).
-%true.
-%
-%?- successful_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%true.
-%
-%?- rebutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%true.
+According to the definitions of Verheij's case model formalism, the rule $ifg \wedge fpp \Rightarrow crc$ is valid in this model. As the model shows, this argument is coherent, as all cases imply sentence $ifg \wedge fpp \wedge crc$ which is the case made by the argument $(ifg \wedge fpp, crc)$. Besides, all the cases which imply the premises $ifg \wedge fpp$, also imply the conclusion $crc$. So argument $(ifg \wedge fpp, crc)$ is conclusive in the case model. And these arguments are also conclusive in the model:
 
-%?- undercutting_attack(argument([pac,ite,pco],[ifg]),[pec]).
-%false.
+\begin{itemize}
+\item $(C,  \geq) \models crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$
+\item $(C,  \geq) \models crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$
+\end{itemize}
 
-%?- successful_attack(argument([crc,ils],[l3fti,fin]),[hps]).
-%true.
+Argument $(pac \wedge ite \wedge pco, ifg)$ is presumptively valid. In the light of the copyright infringement model, this argument is coherent as Case 2 has implied the case made by the argument $(pac \wedge ite \wedge pco, ifg)$. And Case 2 is also the strongest case among the cases which implied the premises of this argument. So we say the argument $(pac \wedge ite \wedge pco, ifg)$ is presumptively valid in the case model. As the argument diagram in Figure 2 shows, the defeating circumstance $pec$ successfully attacks the argument $(pac \wedge ite \wedge pco, ifg)$, it makes the argument $(pac \wedge ite \wedge pco \wedge pec, \neg ifg)$ presumptively valid, which means this circumstance is rebutting. In the same way, the following arguments are considered to be validate.
 
-%?- successful_attack(argument([crc,ils],[cdt,fin]),[hps]).
-%true.
+\begin{itemize}
+\item $(C,  \subseteq) \models crc \leadsto ils$
+\item $(C,  \subseteq) \models crc \wedge ils \leadsto l3fti \wedge fin \times hps$
+\item $(C,  \subseteq) \models crc \wedge ils \leadsto cdt \wedge fin \times hps$
+\item $(C,  \subseteq) \models crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
+\end{itemize}
 
-%?-successful_attack(argument([crc,ihe],[m3fti,fin]),[lps]).
-%true.
-
-%?- conclusive(argument([epr],[ifg])).
-%true.
-
-%?- conclusive(argument([pac,avp],[ifg])).
-%true.
-
-%?- conclusive(argument([ifg,fpp],[crc])).
-%true.
-
-%?- conclusive(argument([crc,l3fti,fin,cpb],[pbt])).
-%true.
-%\end{lstlisting}
-
-As the queries shows, the program has verified that circumstance \textit{pec} successfully attacks argument $pac \wedge ite \wedge pco \leadsto ifg$, and it is a rebutting attack, as well as the other arguments with defeating circumstances above which are also considered to be successful. The program also finds argument $epr \Rightarrow ifg$ and other three arguments to be conclusive. These results are corresponded to the analysis about Chinese copyright infringement model above.
+The Prolog program we designed has confirmed the validity of the arguments above. The Prolog clauses in Figure 2 (right) are considered to be true in the Prolog queries, which means the results of Prolog program are corresponded to the analysis about Chinese copyright infringement model above.
 
 \section{Discussion and Conclusion}
 
-\noindent In this paper, two case models with different backgrounds based on Verheij's case model formalism have been discussed. As the arguments implied in these case models are corresponded to the rules in statutes, Verheij's theory has been proved that it is suitable for Chinese legal system. The preferred relation established by Verheij solves the priority relationship among the cases in case model, so that the presumptive arguments in legal reasoning can be concluded by this theory. In other words, some legal issues can be solved, such as the rules used for legal reasoning, which are beyond the statutes, for instance, "presumption of innocence" in the background of Chinese legal system. Although it is not in any statute, every judge will think about it during the process of making decisions. So we can place this rule as several cases in the preferred relation of a case model properly to solve this issue. Therefore, we believe arguments embedded values are more suitable for dealing with practical issues in legal reasoning. 
+\noindent A case model in the background of Chinese criminal law has been built as a case study for the program. As the arguments implied in this case model are corresponded to the rules in statutes, Verheij's theory has been proved that it is suitable for Chinese legal system. %The preferred relation established by Verheij solves the priority relationship among the cases in case model, so that the presumptive arguments in legal reasoning can be concluded by this theory. In other words, some legal issues can be solved, such as the rules used for legal reasoning, which are beyond the statutes, for instance, "presumption of innocence" in the background of Chinese legal system. Although it is not in any statute, every judge will think about it during the process of making decisions. So we can place this rule as several cases in the preferred relation of a case model properly to solve this issue. Therefore, we believe arguments embedded values are more suitable for dealing with practical issues in legal reasoning. 
 
-The program we build in this paper intends to make the modeling process with less mistakes and its main function is automatically verifying the validity of the arguments implicated in a case model and the case model itself. This program has been proved that it is completely suitable for those models based on Verheij's theory, even these models have different backgrounds. Compare with the original hand-made modeling way, it can reduce mistakes during the process of modeling significantly, as this program can verify the model automatically. So, it is a successful attempt as a computational implementation for Verheij's case model formalism which can make Verheij's theory more useable in practical environment. 
+The program we introduced in this paper intends to make the modeling process with less mistakes and its main function is automatically verifying the validity of the arguments implicated in a case model and the case model itself. This program has been proved that it is completely suitable for those models based on Verheij's theory, even these models have different backgrounds. Compare with the original hand-made modeling way, it can reduce mistakes during the process of modeling significantly, as this program can verify the model automatically. This is a successful attempt as a computational implementation for Verheij's case model formalism which can make Verheij's theory more useful in practical environment. 
 
 However, there is still room for improvement. For those people who are unfamiliar with legal statues, an explicit case model can be helpful for them, which means the model needs to contain as much details as possible, such as the official judicial explanations related to Chinese criminal law. But this action can bring a problem cannot be ignored. For instance, there are 8 scenarios about the elementary proposition "amount of illegal gains is huge or other especially serious circumstances" mentioned in the Chinese copyright infringement model in the light of relevant judicial explanations, if all of these specific scenarios are added into the model, the number of cases in this model will become huge. According to the way of building a model completely based on Verheij's formalism, all these scenarios will be treated as elementary propositions and they will replace the position of  $ihe$. The number of cases will increase by eight times, if we added these specific scenarios to the model by Verheij's theory directly, which also lets the process of modeling easily to make mistakes. It will be a hard job for the people who wants to build a model. This issue needed to be solved in the future research.
 
-The results of this paper shows that Verheij's case model formalism can be used to model the object with complex argument structure, and the program developed in this paper is feasible for the models based on Verheij's theory. It also proves that the Prolog program we built can well combine cases, rules and arguments. It is not only applicable to the civil law system but also to the Chinese legal system. AI and legal reasoning technology needs to combine rule-based reasoning, case-based reasoning and argumentation together, and argumentation technology can be the bridge of both cases and rules.
+The results of this paper shows that Verheij's case model formalism can be used to model the object with complex argument structure, and the program developed in this paper is feasible for the models based on Verheij's theory. %It also proves that the Prolog program we built can well combine cases, rules and arguments, which is not only applicable to the civil law system but also to the Chinese legal system. 
+AI and legal reasoning technology needs to combine rule-based reasoning, case-based reasoning and argumentation together, and argumentation technology can be the bridge of both cases and rules.
 
 \footnotesize
 \bibliographystyle{unsrt}
