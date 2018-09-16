@@ -159,7 +159,7 @@ The representation of the case model starts with a series of definitions of case
 
 The predicate {\mf case\_model\_valid/1} (with a case identifier as single argument) checks whether a case model fulfills the definition, i.e. whether all cases are consistent, incompatible and different (cf. Definition 2.1 above). Consistency is determined by checking whether a case contains an element and its negation. For instance, a case {\mf [not(dmg), dmg]} would not be consistent. This straightforward way of consistency checking is allowed by our use of a language of elementary literals instead of a full propositional language. Incompatibility is checked by determining for every pair of cases whether there is an element in one case of which the negation is in the other. For instance, cases 
 {\mf case\_num(101): not(dmg)} and 
-{\mf case\_num(104): not(dut),dmg,...} can be distinguished by {\mf not(dmg)} and {\mf dmg}, hence are incompatible. Difference is checked by determining for every pair of cases whether there is an element in one case that is not in the other. Note that a pair of incompatible cases implies that they are different. Checking elements 4 and 5 in the formal definition of case models is not directly representd since we use an explicit representation of the total preorder as a list of equivalence classes. In this representation another validity check is helpful, namely whether each case of which an identifier appears in the ordering is defined and whether each case identifier of a defined case appears in the ordering exactly once. This check has been implemented using the predicate {\mf ordering\_valid/1}.
+{\mf case\_num(104): not(dut),dmg,...} can be distinguished by {\mf not(dmg)} and {\mf dmg}, hence are incompatible. Difference is checked by determining for every pair of cases whether there is an element in one case that is not in the other. Note that a pair of incompatible cases implies that they are different. Checking elements 4 and 5 in the formal definition of case models is not directly represented since we use an explicit representation of the total preorder as a list of equivalence classes. In this representation another validity check is helpful, namely whether each case of which an identifier appears in the ordering is defined and whether each case identifier of a defined case appears in the ordering exactly once. This check has been implemented using the predicate {\mf ordering\_valid/1}.
 
 Arguments are represented by a list of premises and a list of conclusions. For instance, {\mf argument([dmg,unl,imp,cau],[dut])} represents the argument to the one-element conclusion that there is a duty to repair the damages ({\mf dut}) from the four-element premises that there are damages ({\mf dmg}) by an unlawful act ({\mf unl}) that is imputable ({\mf imp}) to the actor and that has caused the damages ({\mf cau}).
 
@@ -198,66 +198,35 @@ The Prolog program can be used to validate hand-made domain models, such as the 
 \begin{adjustwidth}{0.5cm}{0cm}
 \noindent \textbf{Article 217} Whoever, for the purpose of making profits, commits any of the following acts of infringement on copyright shall, if the amount of illegal gains is relatively large, or if there are other serious circumstances, be sentenced to fixed-term imprisonment of not more than three years or criminal detention and shall also, or shall only, be fined; if the amount of illegal gains is huge or if there are other especially serious circumstances, he shall be sentenced to fixed-term imprisonment of not less than three years but not more than seven years and shall also be fined:
 
-\noindent (1) copying and publishing a written work, musical work, motion picture, television programme or other visual works, computer software or other works without permission of the copyright owner;
+\noindent (1) reproducing and distributing a written work, musical work, motion picture, television programme or other visual works, computer software or other works without permission of the copyright owner;
 
-\noindent (2) publishing a book of which another person has the exclusive publishing right;
+\noindent (2) publishing a book of which the exclusive right of publication is enjoyed by another person;
 
-\noindent (3) copying and publishing audio or video recording without permission of the producer; or
+\noindent (3) reproducing and distributing an audio or video recording produced by another person without permission of the producer; or
 
-\noindent (4) producing or selling an artwork where the signature of the author is forged.\newline
+\noindent (4) producing or selling a work of fine art with forged signature of another painter.\newline
 \end{adjustwidth}
 
 \normalsize
 \noindent 
-In Art. 217, there are 4 kinds of act in copyright infringement, if someone violates other people's copyright for the purpose of making profits, then he will be sentenced to the crime of copyright infringement. The judge will sentence the person to one of 4 different kinds of punishment according to the degree of severity of his crime. %Above all, several rules about copyright infringement can be extracted.
-%
-%\begin{enumerate}
-%\item If the defendant has following actions:
-%\begin{itemize}
-%\item \textit{publish or copied something which can be considered as one of the items shown in Art. 217:1 without permission of the copyright owner};
-%\item \textit{publish a book of which another person has the exclusive publishing right};
-%\item  \textit{publish or copied the audio or video resording which the producer is someone else};
-%\item \textit{produce or sell an artwork where the signature of the author if forged},
-%\end{itemize}
-%Then the defendant will be regarded as violating someone else's copyright.
-%
-%\item If the defendant was regarded as violating someone else's copyright for the purpose of making profits, then the defendant will be sentenced to the crime of copyright infringement. %($ifg \wedge fpp \Rightarrow crc$).
-%
-%\item If \textit{the amount of defendant's illegal gains was large or existed other serious circumstances}, the defendant shall be sentenced to 3 kinds of punishments, \textit{fixed-term imprisonment of not more than 3 years and fined}; \textit{criminal detention and fined} and only \textit{fined}. %($crc \wedge ils \leadsto l3fti \wedge fin$)($crc \wedge ils \leadsto cdt \wedge fin$)($crc \wedge ils \leadsto fin$).
-%
-%\item If \textit{the amount of defendant's illegal gains was huge or existed other especially serious circumstances}, then the defendant shall be sentenced to \textit{fixed-term imprisonment of not less that three years but not more than seven years and fined}. %(this can be represented as $crc \wedge ihe \Rightarrow m3fti \wedge fin$.)
-%
-%\item There are two kinds of punishments which are possible to be put on probation, if the defendant satisfied the conditions of probation: 
-%\begin{itemize}
-%\item fixed-term imprisonment of not more than 3 years and fined; %($crc \wedge l3fti \wedge fin \wedge cpb \Rightarrow pbt$); 
-%\item criminal detention and fined. %($crc \wedge cdt \wedge fin \wedge cpb \Rightarrow pbt$).
-%\end{itemize}
-%\end{enumerate}
-%
-According to Art. 217's relevant judicial explanations, there are 3 defeating circumstances: 1. The action is not ``without permission of the copyright owner"; 2. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a heavier punishment; 3. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a lighter punishment.
+In Art. 217, there are 4 kinds of act in copyright infringement, if someone violates other people's copyright for the purpose of making profits, then he will be sentenced to the crime of copyright infringement. The judge will sentence the person to one of 4 different kinds of punishment according to the degree of severity of his crime. According to the articles related to Art. 217 in Chinese criminal law~\cite{StateCouncil2015series}, and relevant official judicial interpretations~\cite{SupremeCourt2011Judicial}, there are 3 defeating circumstances: 1. The action is not ``without permission of the copyright owner"; 2. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a heavier punishment; 3. The defendant is sentenced to the crime of copyright infringement, however, he also satisfies with the conditions of being given a lighter punishment.
 
-%If we add these defeating circumstance to the rules we listed above, then some of the rules will be changed. For example,
-%\begin{itemize}
-%\item $pac \wedge ite \wedge pco \leadsto ifg \times pec$
-%\item $crc \wedge ils \leadsto l3fti \wedge fin \times hps$
-%\item $crc \wedge ihe \leadsto m3fti \wedge fin \times lps$
-%\end{itemize}
 
 \begin{table}[t]
+	\tiny
 	\caption{Elementary propositions in the copyright infringement model; with abbreviations}
 	\label{tab:long}
-
 	\begin{tabularx}{\textwidth}{p{0.5cm}|p{11cm}}
 		\hline
 		ifg & there is a copyright infringement\\
 		fpp & the act was for the purpose of making profits\\
-		pac & the act was publish and copy\\
+		rad & the act was reproduced and distributed\\
 		ite & the act concerned the items in Art. 217:1\\
 		pco & the act was without permission of the copyright owner\\
-		pec & the act was not "without permission of the copyright owner"\\
-		epr & the act was publishing a book that has another person's exclusive publishing right\\
-		avp & the act was audio or video recording of which the producer is someone else\\
-		psa & the act was producing or selling an artwork with a forged author signature\\
+		npo & the act was not "without permission of the copyright owner"\\
+		epr & the act was publishing a book of which the exclusive right of publication is enjoyed by another person\\
+		avp & the act was audio or video recording produced by another person without permission of the producer\\
+		psa & the act was producing or selling a work of fine art with forged signature of another painter\\
 		ils & the amount of illegal gains is large or other serious circumstances\\
 		ihe & the amount of illegal gains is huge or other especially serious circumstances\\
 		crc & the person commits the crime of copyright infringement\\
@@ -271,10 +240,10 @@ According to Art. 217's relevant judicial explanations, there are 3 defeating ci
 		pbt & the defendant will be put on probation\\
 		\hline
 	\end{tabularx}
-
 \end{table}
+\normalsize
 
-In the light of Art. 217 and the judicial explanations related to it, a case model can be built. 
+In the light of Art. 217 and the judicial interpretations related to it, a case model can be built. 
 In our copyright infringement model, we use the elementary propositions in \mbox{Table}~\ref{tab:long}, shown with their formal abbreviations. 
 The full model has 46 cases. A selection of the cases is shown in its Prolog version in Listing~2. The model has identifier {\mf model\_num(2)}. 
 In the text below, cases are numbered 1, 2, 3, ... corresponding  to cases {\mf 201, 202, 203, ...} in the Prolog version.
@@ -283,19 +252,19 @@ Case 1 is built by the principle of ``presumption of innocence". Case 2 is for t
 From Chinese copyright infringement, we can analyze the argument structure as in the diagram in Figure~\ref{fig:copyright} (left). This argument structure shows multiple rule-based steps and exception-based attacks. The structure is valid in the case model we built, as follows.
 
 \begin{lstlisting}[caption={The Chinese copyright infringement case model in Prolog (selection)},captionpos=b,float]
-case(model_num(2),case_num(201),[not(pac),not(ite),not(pco),not(epr),not(avp),not(psa),not(ifg)]).
-case(model_num(2),case_num(202),[pac,ite,pco,pec,not(ifg)]).
-case(model_num(2),case_num(203),[pac,ite,pco,not(pec),not(epr),not(avp),not(psa),ifg,not(fpp)]).
-case(model_num(2),case_num(204),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(205),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(206),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),not(lps),m3fti,not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(207),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(208),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
-case(model_num(2),case_num(209),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),not(cdt),fin]).
-case(model_num(2),case_num(210),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,cpb,pbt]).
-case(model_num(2),case_num(211),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
-case(model_num(2),case_num(212),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
-case(model_num(2),case_num(213),[pac,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
+case(model_num(2),case_num(201),[not(rad),not(ite),not(pco),not(epr),not(avp),not(psa),not(ifg)]).
+case(model_num(2),case_num(202),[rad,ite,pco,npo,not(ifg)]).
+case(model_num(2),case_num(203),[rad,ite,pco,not(npo),not(epr),not(avp),not(psa),ifg,not(fpp)]).
+case(model_num(2),case_num(204),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
+case(model_num(2),case_num(205),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
+case(model_num(2),case_num(206),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,ihe,not(ils),crc,not(hps),not(lps),m3fti,not(l3fti),not(cdt),fin]).
+case(model_num(2),case_num(207),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,hps,not(lps),not(m3fti),not(l3fti),not(cdt),not(fin)]).
+case(model_num(2),case_num(208),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),lps,not(m3fti),not(l3fti),not(cdt),not(fin)]).
+case(model_num(2),case_num(209),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),not(cdt),fin]).
+case(model_num(2),case_num(210),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,cpb,pbt]).
+case(model_num(2),case_num(211),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,cpb,pbt]).
+case(model_num(2),case_num(212),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),l3fti,not(cdt),fin,not(cpb),not(pbt)]).
+case(model_num(2),case_num(213),[rad,ite,pco,not(epr),not(avp),not(psa),ifg,fpp,not(ihe),ils,crc,not(hps),not(lps),not(m3fti),not(l3fti),cdt,fin,not(cpb),not(pbt)]).
 ...
 case_order(model_num(2),[case_num(201),[case_num(202),case_num(203), ...],[case_num(204),case_num(205),case_num(207),case_num(208), ... ,case_num(206),case_num(209),case_num(210),case_num(211),case_num(212),case_num(213), ...]]).
 \end{lstlisting}
@@ -308,29 +277,28 @@ case_order(model_num(2),[case_num(201),[case_num(202),case_num(203), ...],[case_
 
 Following the definitions of the case model formalism (Section~\ref{sec:cm}), the rule $\textrm{ifg} \wedge \textrm{fpp} \Rightarrow \textrm{crc}$ is indeed valid in this model, in different ways. As the model shows, this argument is coherent, as all cases imply sentence $\textrm{ifg} \wedge \textrm{fpp} \wedge \textrm{crc}$ which is the case made by the argument $(\textrm{ifg} \wedge \textrm{fpp}, \textrm{crc})$. Besides, all the cases which imply the premises $\textrm{ifg} \wedge \textrm{fpp}$, also imply the conclusion $\textrm{crc}$. So argument $(\textrm{ifg} \wedge \textrm{fpp}, \textrm{crc})$ is also conclusive in the case model, and hence it is presumptively valid. And these arguments are also conclusive in the model:
 
-\begin{description}
+\begin{itemize}
 \item $(C,  \geq) \models \textrm{crc} \wedge \textrm{l3fti} \wedge \textrm{fin} \wedge \textrm{cpb} \Rightarrow \textrm{pbt}$
 \item $(C,  \geq) \models \textrm{crc} \wedge \textrm{cdt} \wedge \textrm{fin} \wedge \textrm{cpb} \Rightarrow \textrm{pbt}$
-\end{description}
+\end{itemize}
 
-\noindent Argument $(\textrm{pac} \wedge \textrm{ite} \wedge \textrm{pco}, \textrm{ifg})$ is presumptively valid. In the copyright infringement model, this argument is coherent as Case 2 implies $\textrm{pac} \wedge \textrm{ite} \wedge \textrm{pco} \wedge \textrm{ifg}$, the case made by the argument. As Case 2 is also the strongest case among the cases which imply the premises of this argument, the argument $(\textrm{pac} \wedge \textrm{ite} \wedge \textrm{pco}, \textrm{ifg})$ is presumptively valid in the case model. It is not conclusive, as the defeating circumstance $\textrm{pec}$ successfully attacks the argument. Since the case model makes the argument $(\textrm{pac} \wedge \textrm{ite} \wedge \textrm{pco} \wedge \textrm{pec}, \neg \textrm{ifg})$ presumptively valid, this defeating circumstance is rebutting. In the same way, the following hold in the case model.
+\noindent Argument $(\textrm{rad} \wedge \textrm{ite} \wedge \textrm{pco}, \textrm{ifg})$ is presumptively valid. In the copyright infringement model, this argument is coherent as Case 2 implies $\textrm{rad} \wedge \textrm{ite} \wedge \textrm{pco} \wedge \textrm{ifg}$, the case made by the argument. As Case 2 is also the strongest case among the cases which imply the premises of this argument, the argument $(\textrm{rad} \wedge \textrm{ite} \wedge \textrm{pco}, \textrm{ifg})$ is presumptively valid in the case model. It is not conclusive, as the defeating circumstance $\textrm{npo}$ successfully attacks the argument. Since the case model makes the argument $(\textrm{rad} \wedge \textrm{ite} \wedge \textrm{pco} \wedge \textrm{npo}, \neg \textrm{ifg})$ presumptively valid, this defeating circumstance is rebutting. In the same way, the following hold in the case model.
 
-\begin{description}
+\begin{itemize}
 \item $(C,  \subseteq) \models \textrm{crc} \leadsto \textrm{ils}$
 \item $(C,  \subseteq) \models \textrm{crc} \wedge \textrm{ils} \leadsto \textrm{l3fti} \wedge \textrm{fin} \times \textrm{hps}$
 \item $(C,  \subseteq) \models \textrm{crc} \wedge \textrm{ils} \leadsto \textrm{cdt} \wedge \textrm{fin} \times \textrm{hps}$
 \item $(C,  \subseteq) \models \textrm{crc} \wedge \textrm{ihe} \leadsto \textrm{m3fti} \wedge \textrm{fin} \times \textrm{lps}$
-\end{description}
+\end{itemize}
 
 \noindent The Prolog program confirms the validity of the arguments above. Figure 2 (right) lists Prolog queries evaluated as true, which means the results of the Prolog program correspond to our analysis of the Chinese copyright infringement model.
 
 \section{Discussion and Conclusion}
 
 \noindent 
-%A case model in the background of Chinese criminal law has been built as a case study for the program. As the arguments made valid in this case model correspond to the rules in the statutes, the case model formalism theory has been tested to be suitable for an example domain in the Chinese legal system. %The preferred relation established by Verheij solves the priority relationship among the cases in case model, so that the presumptive arguments in legal reasoning can be concluded by this theory. In other words, some legal issues can be solved, such as the rules used for legal reasoning, which are beyond the statutes, for instance, "presumption of innocence" in the background of Chinese legal system. Although it is not in any statute, every judge will think about it during the process of making decisions. So we can place this rule as several cases in the preferred relation of a case model properly to solve this issue. Therefore, we believe arguments embedded values are more suitable for dealing with practical issues in legal reasoning. 
 The Prolog program we introduced in this paper can support the process of modeling legal domains and its main function is automatically verifying the validity of the arguments implicated in a case model and the case model itself. This program has been shown to be suitable for both the Dutch tort law model presented before (\cite{Verheij2017Formalizing}) and the new Chinese copyright infringement model. Compared with the original hand-made modeling way, the program supports the reduction of mistakes made during the process of modeling, as this program can verify the model automatically. In this way, we have presented the first computational implementation for the case model formalism which can support making the theoretical approach more applicable in a practical environment. 
 
-A remaining puzzle is to control the number of cases in case models. For those people who are unfamiliar with legal statues, an explicit case model can be helpful for them, which means the model needs to contain as much details as possible, such as the official judicial explanations related to Chinese criminal law. But case models can require large numbers of cases. For instance, there are already 8 scenarios about the elementary proposition ``amount of illegal gains is huge or other especially serious circumstances" mentioned in the Chinese copyright infringement model in the light of relevant judicial explanations. If all of such specific scenarios are added into the model, the number of cases in this model quickly increases. According to the way of building a model completely based on the case model formalism, all these scenarios will be treated as elementary propositions and they will replace the position of  $\textrm{ihe}$. The number of cases increase by eight times, if we added these specific scenarios to the model directly, which is error prone when the list of cases is developed manually. In future research, keeping the number of cases in control could be investigated, e.g., by providing computational means that do not require the explicit listing of all possible cases. 
+A remaining puzzle is to control the number of cases in case models. For those people who are unfamiliar with legal statues, an explicit case model can be helpful for them, which means the model needs to contain as much details as possible, such as the official judicial interpretations related to Chinese criminal law. But case models can require large numbers of cases. For instance, there are already 8 scenarios about the elementary proposition ``amount of illegal gains is huge or other especially serious circumstances" mentioned in the Chinese copyright infringement model in the light of relevant judicial interpretations. If all of such specific scenarios are added into the model, the number of cases in this model quickly increases. According to the way of building a model completely based on the case model formalism, all these scenarios will be treated as elementary propositions and they will replace the position of  $\textrm{ihe}$. The number of cases increase by eight times, if we added these specific scenarios to the model directly, which is error prone when the list of cases is developed manually. In future research, keeping the number of cases in control could be investigated, e.g., by providing computational means that do not require the explicit listing of all possible cases. 
 
 The results of this paper shows that an implementation of the case model formalism can be used to support the modeling of a legal domain with a complex argument structure involving combined support and attack. In this way, we have shown a computational connection between cases, rules and arguments, applied to the civil law system of the Netherlands and to criminal law in the Chinese legal system. 
 In this way, we contribute to AI and legal reasoning technology that is needed to combine rule-based reasoning, case-based reasoning and argumentation together, paving the way for argumentation technology that bridges cases and rules, as it is common in the law.
