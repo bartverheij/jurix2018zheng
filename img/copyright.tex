@@ -22,12 +22,12 @@
 			\node[arg] (s6) at (0,-1) {ifg};
 			\node[arg] (s7) at (0,-2.5) {fpp};
 			\node[arg] (s8) at (0,-4) {crc};
-			\node[arg] (s9) at (2,-5) {hps};
-			\node[arg] (s10) at (4,-6) {lps};
+			%\node[arg] (s9) at (2,-5) {hps};
+			%\node[arg] (s10) at (4,-6) {lps};
 			\node[arg] (s11) at (-3,-4) {ihe};
 			\node[arg] (s12) at (3,-4) {ils};
-			\node[arg] (s13) at (-2,-6) {hps};
-			\node[arg] (s15) at (-2,-7) {lps};
+			%\node[arg] (s13) at (-2,-6) {hps};
+			%\node[arg] (s15) at (-2,-7) {lps};
 			\node[arg] (s16) at (1,-7) {l3fti \& fin};
 			\node[arg] (s18) at (5,-7) {cdt \& fin};
 			\node[arg] (s19) at (0,-8) {cpb};
@@ -43,14 +43,14 @@
 		\draw[attack] (s2) -- (-1.5,-1);
 		\draw[] (s5) -- (4,-1);
 		\draw[->] (4,-1) -- (s6);
-		\draw[attack] (s13) -- (-3, -6);
-		\draw[attack] (s15) -- (-3, -7);
+		%\draw[attack] (s13) -- (-3, -6);
+		%\draw[attack] (s15) -- (-3, -7);
 		\draw[->] (3,-7) -- (2,-7);
 		\draw[->] (3,-7) -- (4,-7);
 		\draw[] (s19) -- (1,-8);
 		\draw[] (s21) -- (5,-8);
-		\draw[attack] (s9) -- (3, -5);
-		\draw[attack] (s10) -- (3, -6);
+		%\draw[attack] (s9) -- (3, -5);
+		%\draw[attack] (s10) -- (3, -6);
 		\draw[->, arg] (s1) -- (s6);
 		\draw[->, arg] (s4) -- (s6);
 		\draw[->, arg] (s6) -- (s7);
@@ -65,12 +65,12 @@
 		
 	\node[right] at (7,1) {{\mf presumptively\_valid(argument([rad,ite,pco],[ifg])).}};
 	\node[right] at (7,0) {{\mf presumptively\_valid(argument([crc],[ils])).}};
-	\node[right] at (7,-2) {{\mf rebutting\_attack(argument([rad,ite,pco],[ifg]),[npo]).}};
-	\node[right] at (7,-3) {{\mf rebutting\_attack(argument([crc,ils],[l3fti,fin],[hps])).}};
-	\node[right] at (7,-4) {{\mf rebutting\_attack(argument([crc,ihe],[m3fti,fin],[lps])).}};
+	\node[right] at (7,-1) {{\mf presumptively\_valid(argument([crc,ils],[l3fti,fin])).}};
+	\node[right] at (7,-3) {{\mf rebutting\_attack(argument([rad,ite,pco],[ifg]),[npo]).}};
+	\node[right] at (7,-5) {{\mf conclusive(argument([crc,ihe],[m3fti,fin])).}};
 	\node[right] at (7,-6) {{\mf conclusive(argument([ifg,fpp],[crc])).}};
-	\node[right] at (7,-7) {{\mf conclusive(argument([crc,l3fti,fin,cpb],[pbt])).}};
-	\node[right] at (7,-8) {{\mf conclusive(argument([crc,cdt,fin,cpb],[pbt])).}};
+	\node[right] at (7,-7) {{\mf conclusive(argument([crc,ils,l3fti,fin,cpb],[pbt])).}};
+	\node[right] at (7,-8) {{\mf conclusive(argument([crc,ils,cdt,fin,cpb],[pbt])).}};
 	
 
 		\end{scope}
